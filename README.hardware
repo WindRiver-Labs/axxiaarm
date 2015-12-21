@@ -1,0 +1,99 @@
+	LSI axxiaarm Board Support Package
+
+
+Table of Contents
+=================
+
+1. Supported Boards
+2. Change History
+3. BSP Features
+4. BSP Notes
+
+1. Supported Boards
+===================
+
+This BSP supports the following boards:
+
+  + LSI ARM Amarillo: ARM Cortex A15 Processor.
+
+2. Change History
+=================
+
+  - 2016/01 (US66955): Wind River Linux 8.0 RCPL01, initial standard support
+                       LSI ARM Axxia (standard and preempt-rt)
+
+3. BSP Features
+===============
+
+3.1 Supported Features
+======================
+
+This BSP supports the following features.
+
+  o Bus
+	+ I2C: On-Chip I2C controller
+	+ SPI: PL022 SPI bus controller in master mode
+
+  o USB
+	+ USB Host: CI13612A EHCI USB Host controller
+
+  o Network
+	+ Ethernet: acp-femac
+
+  o Storage
+	+ SPI flash: m25p80
+
+  o Misc Devices
+	+ UART: On-Chip High-Speed UART
+	+ DMA: On-Chip smart direct memory access controller
+
+3.2 Unsupported Features
+========================
+
+The following features are not supported and validated:
+	x SD/MMC: ARM AMBA Multimedia Card Interface
+	x PCIe: On-Chip PCIe controller
+
+4. BSP Notes
+============
+
+4.1 Hardware Description
+--------------------------
+
+There are two modules in the evaluation board, EP4(ep5020 ppc cpu) and
+A15(ARM Cortex a15 cpu). The module on the rear panel of EVA board is EP4,
+2 ethernets on it are used by EP4 only. The front ethernet is used by A15.
+
+For complete LSI ARM Amarillo details please directly contact LSI.
+
+4.2 Target Notes
+------------------
+
+NOTE: This BSP is only validated in the following environment, if used in a
+different environment it may run into unknown issues.
+
+	LSI Amarillo:
+	-------------
+	Processor:		ARMv7 Processor rev 2
+	BootLoader:		U-Boot
+	BootLoader Version:	5.8.1.66
+
+4.2.2 PCI-Express
+-----------------
+The PCI-Express module on Amarillo board is multiplexed with SRIO signals and an
+EP4 daughter card (a Freescale P5020 system) is connected to the PCIe slot. The
+interface can be configured to PCIe x4 root complex by on-board DIP switch SW1
+on the front panel:
+
+ SW1.3 = ON
+ SW1.4 = ON
+ SW1.5 = ON
+
+To validate the PCIe feature, At first, Switch the EP4 daughter card to endpoint mode,
+The next to update the 1rd, 2rd u-boot and parameter file to the spi flash of
+the Amarillo.
+It is delivered with this BSP together. Please refer to the README in bootloader
+section for details.
+
+Note: The Amarillo PCIe feature is only validated with enumeration function due
+to the restriction of the EP4 card.

@@ -1,0 +1,145 @@
+From 44c856a0f55ce9506306e8519629e0ab281a694b Mon Sep 17 00:00:00 2001
+From: Xulin Sun <xulin.sun@windriver.com>
+Date: Wed, 25 Nov 2015 02:05:28 -0500
+Subject: [PATCH] lsi-axm55xx: fix building error to matchup compiler gcc5
+
+fix building error caused by "extern inline", which could be
+changed to "static inline" to avoid the building failed issue.
+
+Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
+---
+ arch/arm/include/asm/io.h | 12 ++++++------
+ arch/arm/lib/board.c      | 18 +++++++++---------
+ common/main.c             |  2 +-
+ include/pci.h             |  4 ++--
+ 4 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+index 1fbc531..5f5f8d0 100644
+--- a/arch/arm/include/asm/io.h
++++ b/arch/arm/include/asm/io.h
+@@ -75,42 +75,42 @@ static inline phys_addr_t virt_to_phys(void * vaddr)
+ #define __arch_putw(v,a)		(*(volatile unsigned short *)(a) = (v))
+ #define __arch_putl(v,a)		(*(volatile unsigned int *)(a) = (v))
+ 
+-extern inline void __raw_writesb(unsigned int addr, const void *data, int bytelen)
++static inline void __raw_writesb(unsigned int addr, const void *data, int bytelen)
+ {
+ 	uint8_t *buf = (uint8_t *)data;
+ 	while(bytelen--)
+ 		__arch_putb(*buf++, addr);
+ }
+ 
+-extern inline void __raw_writesw(unsigned int addr, const void *data, int wordlen)
++static inline void __raw_writesw(unsigned int addr, const void *data, int wordlen)
+ {
+ 	uint16_t *buf = (uint16_t *)data;
+ 	while(wordlen--)
+ 		__arch_putw(*buf++, addr);
+ }
+ 
+-extern inline void __raw_writesl(unsigned int addr, const void *data, int longlen)
++static inline void __raw_writesl(unsigned int addr, const void *data, int longlen)
+ {
+ 	uint32_t *buf = (uint32_t *)data;
+ 	while(longlen--)
+ 		__arch_putl(*buf++, addr);
+ }
+ 
+-extern inline void __raw_readsb(unsigned int addr, void *data, int bytelen)
++static inline void __raw_readsb(unsigned int addr, void *data, int bytelen)
+ {
+ 	uint8_t *buf = (uint8_t *)data;
+ 	while(bytelen--)
+ 		*buf++ = __arch_getb(addr);
+ }
+ 
+-extern inline void __raw_readsw(unsigned int addr, void *data, int wordlen)
++static inline void __raw_readsw(unsigned int addr, void *data, int wordlen)
+ {
+ 	uint16_t *buf = (uint16_t *)data;
+ 	while(wordlen--)
+ 		*buf++ = __arch_getw(addr);
+ }
+ 
+-extern inline void __raw_readsl(unsigned int addr, void *data, int longlen)
++static inline void __raw_readsl(unsigned int addr, void *data, int longlen)
+ {
+ 	uint32_t *buf = (uint32_t *)data;
+ 	while(longlen--)
+diff --git a/arch/arm/lib/board.c b/arch/arm/lib/board.c
+index 10b5370..a364888 100644
+--- a/arch/arm/lib/board.c
++++ b/arch/arm/lib/board.c
+@@ -306,24 +306,24 @@ void pci_speed_change(char peiCore, peiSpeed_t changeSpeed) {
+  ************************************************************************
+  * May be supplied by boards if desired
+  */
+-inline void __coloured_LED_init(void) {}
++static inline void __coloured_LED_init(void) {}
+ void coloured_LED_init(void)
+ 	__attribute__((weak, alias("__coloured_LED_init")));
+-inline void __red_led_on(void) {}
++static inline void __red_led_on(void) {}
+ void red_led_on(void) __attribute__((weak, alias("__red_led_on")));
+-inline void __red_led_off(void) {}
++static inline void __red_led_off(void) {}
+ void red_led_off(void) __attribute__((weak, alias("__red_led_off")));
+-inline void __green_led_on(void) {}
++static inline void __green_led_on(void) {}
+ void green_led_on(void) __attribute__((weak, alias("__green_led_on")));
+-inline void __green_led_off(void) {}
++static inline void __green_led_off(void) {}
+ void green_led_off(void) __attribute__((weak, alias("__green_led_off")));
+-inline void __yellow_led_on(void) {}
++static inline void __yellow_led_on(void) {}
+ void yellow_led_on(void) __attribute__((weak, alias("__yellow_led_on")));
+-inline void __yellow_led_off(void) {}
++static inline void __yellow_led_off(void) {}
+ void yellow_led_off(void) __attribute__((weak, alias("__yellow_led_off")));
+-inline void __blue_led_on(void) {}
++static inline void __blue_led_on(void) {}
+ void blue_led_on(void) __attribute__((weak, alias("__blue_led_on")));
+-inline void __blue_led_off(void) {}
++static inline void __blue_led_off(void) {}
+ void blue_led_off(void) __attribute__((weak, alias("__blue_led_off")));
+ 
+ /*
+diff --git a/common/main.c b/common/main.c
+index a100678..b35ebbe 100644
+--- a/common/main.c
++++ b/common/main.c
+@@ -58,7 +58,7 @@ DECLARE_GLOBAL_DATA_PTR;
+ /*
+  * Board-specific Platform code can reimplement show_boot_progress () if needed
+  */
+-void inline __show_boot_progress (int val) {}
++static void inline __show_boot_progress (int val) {}
+ void show_boot_progress (int val) __attribute__((weak, alias("__show_boot_progress")));
+ 
+ #if defined(CONFIG_UPDATE_TFTP)
+diff --git a/include/pci.h b/include/pci.h
+index 15f583f..aad7d23 100644
+--- a/include/pci.h
++++ b/include/pci.h
+@@ -462,7 +462,7 @@ struct pci_region {
+ #define PCI_REGION_SYS_MEMORY	0x00000100	/* System memory */
+ #define PCI_REGION_RO		0x00000200	/* Read-only memory */
+ 
+-extern __inline__ void pci_set_region(struct pci_region *reg,
++static __inline__ void pci_set_region(struct pci_region *reg,
+ 				      pci_addr_t bus_start,
+ 				      phys_addr_t phys_start,
+ 				      pci_size_t size,
+@@ -548,7 +548,7 @@ struct pci_controller {
+ 	void *priv_data;
+ };
+ 
+-extern __inline__ void pci_set_ops(struct pci_controller *hose,
++static __inline__ void pci_set_ops(struct pci_controller *hose,
+ 				   int (*read_byte)(struct pci_controller*,
+ 						    pci_dev_t, int where, u8 *),
+ 				   int (*read_word)(struct pci_controller*,
+-- 
+1.9.1
+

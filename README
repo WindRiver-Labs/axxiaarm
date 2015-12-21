@@ -1,0 +1,218 @@
+	LSI axxiaarm Board Support Package
+
+
+1. About this document
+======================
+This document describes the common and non-hardware specific information
+about the LSI axxiaarm board. Please refer to README.hardware
+for hardware specific information.
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with Wind River
+Linux and the wr-kernel layer.
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+Building the axxiaarm layer
+--------------------------
+This layer and wr-kernel layer should be added to bblayers.conf. This
+is done automatically when using the Wind River configure wrapper.
+
+License
+-------
+Copyright (C) 2015 Wind River Systems, Inc.
+
+The right to copy, distribute or otherwise make use of this software may
+be licensed only pursuant to the terms of an applicable Wind River license
+agreement. No license to Wind River intellectual properly rights is granted
+herein. All rights not licensed by Wind River are reserved by Wind River.
+
+Source code included in tree for individual recipes is under the LICENSE
+stated in each recipe (.bb file) unless other stated.
+
+2. BSP Kernel and RootFS Combination
+====================================
+
+The validity of WindRiver Linux kernel and RootFS combination for this BSP is
+in the table.
+The leftmost column of the table is the kernel type, and the top line is the
+RootFS type.
+'Y' in each content cell stands for the combination is supported; 'N' stands
+for not supported:
+
+--------------------------------------------------------------------
+| kernel/rootfs | glibc_std | glibc_small | glibc_cgl | glibc_tiny |
+--------------------------------------------------------------------
+|   standard    |     Y     |      Y      |     N     |     N      |
+--------------------------------------------------------------------
+|   preempt_rt  |     Y     |      Y      |     N     |     N      |
+--------------------------------------------------------------------
+|   cgl         |     N     |      N      |     N     |     N      |
+--------------------------------------------------------------------
+
+Note: with regard to the kernel and RootFS type, please refer to WindRiver Linux
+specification for details.
+
+3. Board Specific Patches
+=========================
+
+To get a list of patches applied to the kernel specific to this BSP
+along with patch descriptions use git whatchanged on the default
+kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
+
+  # cd build/linux-windriver/linux
+	# git whatchanged standard/base..
+
+4. Boot Instructions
+====================
+
+4.1 bootloader
+--------------
+
+Booting the Amarillo is a two stage process.
+
+The 1nd and 2rd stages are both based on U-Boot, and both built from the
+same source tree. The 1nd stage is quite limited, as it has to fit in LCM,
+while the 2rd stage runs from system memory. System memory gets initialized
+in  the 1nd stage, and the 2rd stage gets loaded at the base of system
+memory.
+
+1. u-boot images:
+-----------------
+The u-boot-spl-axxiaarm.bin and u-boot-axxiaarm.img
+are built from the git source code. They are in the export/images/
+direcotry. Other images can be got from layers/wr-bsps/axxiaarm/bootloader/
+
+ u-boot-spl-axxiaarm.bin		--- The 1nd stage boot loader.
+ u-boot-axxiaarm.img			--- The 2rd stage boot loader.
+ AXM55xx_1p0.bin			--- The parameter table file for boot loader.
+ ep5020a_5b_5r0gpcie_ep_5r0gsrio.bin	--- The parameter is switch to endpoint mode
+
+Note: Before update ep5020a_5b_5r0gpcie_ep_5r0gsrio.bin image, The system
+must be switched to the EP4 card(a freescale P5020 system).
+
+2. Updating the 1nd stage boot loader:
+--------------------------------------
+
+The old u-boot using ssp command to write spi flash, In the latest
+u-boot, ssp command is replace by sf.
+
+	# tftp 0x4000000 u-boot-spl-axxia-55xx-2010.01-r0.bin
+
+	# ssp w 0 0x4000000 0x0 0x40000
+or
+	# sf probe 0
+	# sf erase 0 0x40000
+	# sf write 0x4000000 0 ${filesize}
+
+3. Updating the 2rd stage boot loader:
+--------------------------------------
+	# tftp 0x4000000 u-boot-axxia-55xx-2010.01-r0.img
+
+	# ssp w 0 0x4000000 0x100000 0x200000
+or
+	# sf erase 0x100000 0x200000
+	# sf write 0x4000000 0x100000 ${filesize}
+
+
+4. Updating the parameter:
+--------------------------
+	# tftp 0x4000000 AXM55xx_1p0.bin
+
+	# ssp w 0 0x4000000 0x40000 0x10000
+or
+	# sf erase 0x40000 0x10000
+	# sf write 0x4000000 0x40000 ${filesize}
+
+5. Switch EP4 to endpoint mode:
+-------------------------------
+	# tftp 1000000 ep5020a_5b_5r0gpcie_ep_5r0gsrio.bin
+	# protect off all
+	# erase e8000000 +$filesize
+	# cp.b $fileaddr e8000000 $filesize
+
+Note: The EP4 is a freescale P5020 system. In the u-boot step,
+Update the parameter to switch the PCIe of the EP4 to endpoint mode.
+
+
+4.2 NFS Root File System (hardware only)
+----------------------------------------
+
+Configure u-boot with target IP, tftp server, netmask and other required
+network values:
+
+ u-boot=> setenv ethact LSI_FEMAC
+ u-boot=> setenv ad_value 0x61
+ u-boot=> setenv bootm_high 0x20000000
+ u-boot=> setenv bootm_low 0x10000000
+ u-boot=> setenv fdt_high 0xffffffff
+ u-boot=> setenv macspeed 100MF
+ u-boot=> setenv ipaddr <target IP>
+ u-boot=> setenv serverip <nfs server IP>
+ u-boot=> setenv gatewayip <gateway IP>
+ u-boot=> setenv netmask <netmask>
+ u-boot=> setenv rootpath <nfs root>
+ u-boot=> tftp 0x4000000 uImage
+ u-boot=> tftp 0x4500000 axm5516-amarillo.dtb
+ u-boot=> setenv bootargs console=ttyAMA0,115200 root=/dev/nfs rw \
+          nfsroot=$(serverip):$(rootpath) \
+          ip=$(ipaddr)::$(gatewayip):$(netmask)::eth0:off
+ u-boot=> bootm 0x4000000 - 0x4500000
+
+5. Features
+===========
+
+5.1 OProfile
+-------------
+
+This BSP does not have an available hardware performance counter,
+so OProfile must resort to the timer mode. If you are using OProfile
+you need to add "oprofile.timer=1" to the kernel boot options.
+
+5.2 kexec/kdump
+---------------
+
+For discussion purposes, some useful terminology will be described here.
+
+boot kernel - the first kernel that you start and supports kexec, from u-boot
+	          for instance.
+capture kernel - the kernel that you reboot into after a boot kernel crash.
+
+To build the boot or capture kernel, use the following option with the configure
+command for your project:
+
+     --with-template=feature/kexec,feature/kdump
+
+For boot kernel:
+To reserve a memory region and boot a cpu for dump-capture kernel, please pass
+"crashkernel=128M@256M mem=2048M" via command line.
+
+For dump-capture kernel:
+Before boot dump-capture kernel, please add "maxcpus=1" to the boot parameter.
+
+Note: please use zImage as a secondary kernel. It can be found in the
+  build/linux-windriver/linux-<bsp name>-<kernel type>-build/arch/arm/boot/
+directory.
+
+For more detailed information about kdump, please refer to
+Documentation/kdump/kdump.txt in the kernel source tree.
+
+5.3 Ramdisk
+-----------
+
+Before using ramdisk, please set initrd_high to 0xffffffff to implies that the
+initrd are initially copied to working addresses. This will avoid an additional
+copy. otherwise initrd will be relocated to random address.
+
+	In the u-boot terminal:
+	$ setenv initrd_high 0xffffffff
+
+And the ramdisk must be download to the lowmem region.
+
+Note:
+lowmem: linux memory that is always mapped into the kernel's address space.

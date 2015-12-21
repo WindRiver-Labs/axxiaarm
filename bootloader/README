@@ -1,0 +1,69 @@
+NOTE: The files contained in this directory are provided "as is".
+There is no warranty of fitness for any purpose or support provided
+by Wind River for u-boot.
+---
+
+1. u-boot for AXM55XX:
+======================
+Booting the AXM55XX is a two stage process.
+
+The 1nd and 2rd stages are both based on U-Boot, and both built from the
+same source tree. The 1nd stage is quite limited, as it has to fit in LCM,
+while the 2rd stage runs from system memory. System memory gets initialized
+in  the 1nd stage, and the 2rd stage gets loaded at the base of system
+memory.
+
+2. Updating the 1nd stage boot loader:
+======================================
+
+The old u-boot using ssp command to write spi flash, In the latest
+u-boot, ssp command is replace by sf.
+
+	# tftp 0x4000000 u-boot-spl-axxia-55xx-2010.01-r0.bin
+
+	# ssp w 0 0x4000000 0x0 0x40000
+or
+	# sf probe 0
+	# sf erase 0 0x40000
+	# sf write 0x4000000 0 ${filesize}
+
+3. Updating the 2rd stage boot loader:
+======================================
+	# tftp 0x4000000 u-boot-axxia-55xx-2010.01-r0.img
+
+	# ssp w 0 0x4000000 0x100000 0x200000
+or
+	# sf erase 0x100000 0x200000
+	# sf write 0x4000000 0x100000 ${filesize}
+
+
+4. Updating the parameter:
+==========================
+	# tftp 0x4000000 AXM55xx_1p0.bin
+
+	# ssp w 0 0x4000000 0x40000 0x10000
+or
+	# sf erase 0x40000 0x10000
+	# sf write 0x4000000 0x40000 ${filesize}
+
+5. Switch EP4 to endpoint mode:
+==============================
+	# tftp 1000000 ep5020a_5b_5r0gpcie_ep_5r0gsrio.bin
+	# protect off all
+	# erase e8000000 +$filesize
+	# cp.b $fileaddr e8000000 $filesize
+
+Note: The EP4 is a freescale P5020 system. In the u-boot step,
+Update the parameter to switch the PCIe of the EP4 to endpoint mode.
+
+6. u-boot images:
+=================
+The u-boot-spl-axxiaarm.bin and u-boot-axxiaarm.img
+are built from the source codes in lsi_axxia_u-boot_5.8.1.66.tgz
+with the Wind River addon patches.
+
+ u-boot-spl-axxiaarm.bin		--- The 1nd stage boot loader.
+ u-boot-axxiaarm.img			--- The 2rd stage boot loader.
+ AXM55xx_1p0.bin			--- The parameter table file for boot loader.
+ ep5020a_5b_5r0gpcie_ep_5r0gsrio.bin	--- The parameter is switch to endpoint mode
+					    for the EP4 daughter card
