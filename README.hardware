@@ -19,6 +19,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
+  - 2016/03 (US72963): Add a basic CGL kernel type support.
   - 2016/01 (US66955): Wind River Linux 8.0 RCPL01, initial standard support
                        LSI ARM Axxia (standard and preempt-rt)
 

@@ -19,7 +19,7 @@ memory.
 The old u-boot using ssp command to write spi flash, In the latest
 u-boot, ssp command is replace by sf.
 
-	# tftp 0x4000000 u-boot-spl-axxia-55xx-2010.01-r0.bin
+	# tftp 0x4000000 u-boot-spl-axxiaarm.bin
 
 	# ssp w 0 0x4000000 0x0 0x40000
 or
@@ -29,7 +29,7 @@ or
 
 3. Updating the 2rd stage boot loader:
 ======================================
-	# tftp 0x4000000 u-boot-axxia-55xx-2010.01-r0.img
+	# tftp 0x4000000 u-boot-axxiaarm.img
 
 	# ssp w 0 0x4000000 0x100000 0x200000
 or
