@@ -1,4 +1,4 @@
-	LSI axxiaarm Board Support Package
+	Intel axxiaarm(64) Board Support Package
 
 
 Table of Contents
@@ -14,11 +14,14 @@ Table of Contents
 
 This BSP supports the following boards:
 
-  + LSI ARM Amarillo: ARM Cortex A15 Processor.
+  + Intel ARM Amarillo: ARM Cortex A15 Processor, only run with axxiaarm.
+  + Intel ARM64 axm56xx simulator, only run with axxiaarm64.
 
 2. Change History
 =================
 
+  - 2016/06 (US68839): Wind River Linux 8.0 RCPL06, initial support
+                       Intel Axxiaarm64 simulator(standard and preempt-rt).
   - 2016/03 (US72963): Add a basic CGL kernel type support.
   - 2016/01 (US66955): Wind River Linux 8.0 RCPL01, initial standard support
                        LSI ARM Axxia (standard and preempt-rt)
@@ -39,24 +42,28 @@ This BSP supports the following features.
 	+ USB Host: CI13612A EHCI USB Host controller
 
   o Network
-	+ Ethernet: acp-femac
+	+ Ethernet: acp-femac(Axxiaarm only)
 
   o Storage
 	+ SPI flash: m25p80
 
   o Misc Devices
-	+ UART: On-Chip High-Speed UART
 	+ DMA: On-Chip smart direct memory access controller
+	+ UART: On-Chip High-Speed UART
+
+Note: Since there are no I2C, PCIe, SD/MMC, USB and DMA devices on the simulator,
+the corresponding drivers was only validated by init process.
 
 3.2 Unsupported Features
 ========================
 
 The following features are not supported and validated:
-	x SD/MMC: ARM AMBA Multimedia Card Interface
+	x Ethernet: SMC91X(Axxiaarm64 simulator only)
 	x PCIe: On-Chip PCIe controller
+	x SD/MMC: ARM AMBA Multimedia Card Interface
 
-4. BSP Notes
-============
+4. Axxiaarm BSP Notes
+=====================
 
 4.1 Hardware Description
 --------------------------
@@ -98,3 +105,34 @@ section for details.
 
 Note: The Amarillo PCIe feature is only validated with enumeration function due
 to the restriction of the EP4 card.
+
+5. BSP Notes
+============
+
+5.1 Hardware Description
+------------------------
+
+For complete Intel ARM64 axm56xx simulator details please directly contact Intel.
+
+5.2 Target Notes
+----------------
+
+NOTE:
+1. ATF and U-Boot are not from SDK binary images, they are built locally.
+
+   ATF is based on axxia_atf repo, the top commit is
+   ad701ffdb2e0("axxia: Add the DSP Clusters to the Coherency Domain").
+
+   U-Boot is based on axxia_u-boot_private repo, the top commit is
+   745f8e64412b("board/axxia: Update AVS Code").
+
+2. This BSP is only validated in the following environment, if used in a
+   different environment it may run into unknown issues.
+
+   User can ask Intel to get SDK binaries.
+
+	Processor:             Intel axm56xx simulator
+	Board Revision:        N/A
+	BootLoader:            U-Boot
+	BootLoader Version:    U-Boot 2015.10-00001-g745f8e6 (Apr 13 2016 - 16:39:34 +0800)
+	ASE:                   ASE_1.4.0.040
