@@ -1,7 +1,7 @@
 TARGET_SUPPORTED_KTYPES_axxiaarm = "standard preempt-rt cgl"
 KERNEL_DEVICETREE_axxiaarm = "axm5516-amarillo.dtb \
 				axm5516-sim.dtb"
-TARGET_SUPPORTED_KTYPES_axxiaarm64 = "standard preempt-rt"
+TARGET_SUPPORTED_KTYPES_axxiaarm64 = "standard preempt-rt cgl"
 KERNEL_DEVICETREE_axxiaarm64 = "intel/axm5601-emu.dtb \
 				intel/axm5602-emu.dtb \
 				intel/axm5604-sim.dtb \
