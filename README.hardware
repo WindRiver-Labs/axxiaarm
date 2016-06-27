@@ -20,6 +20,8 @@ This BSP supports the following boards:
 2. Change History
 =================
 
+  - 2016/07 (US81947): Wind River Linux 8.0 RCPL07, add CGL support for
+                       Intel Axxiaarm64 simulator and consolidate git branch
   - 2016/06 (US68839): Wind River Linux 8.0 RCPL06, initial support
                        Intel Axxiaarm64 simulator(standard and preempt-rt).
   - 2016/03 (US72963): Add a basic CGL kernel type support.
@@ -100,8 +102,6 @@ on the front panel:
 To validate the PCIe feature, At first, Switch the EP4 daughter card to endpoint mode,
 The next to update the 1rd, 2rd u-boot and parameter file to the spi flash of
 the Amarillo.
-It is delivered with this BSP together. Please refer to the README in bootloader
-section for details.
 
 Note: The Amarillo PCIe feature is only validated with enumeration function due
 to the restriction of the EP4 card.
