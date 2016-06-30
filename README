@@ -127,21 +127,15 @@ capture kernel - the kernel that you reboot into after a boot kernel crash.
 To build the boot or capture kernel, use the following option with the configure
 command for your project:
 
-     --with-template=feature/kexec,feature/kdump
-
-For boot kernel:
-To reserve a memory region and boot a cpu for dump-capture kernel, please pass
-"crashkernel=128M@256M mem=2048M" via command line.
+     --with-template=feature/kexec
 
 For dump-capture kernel:
 Before boot dump-capture kernel, please add "maxcpus=1" to the boot parameter.
+And it requires the following adjustments to the default kernel configuration:
+	Kernel hacking  --->
+		[ ] Tracers  --->
 
-Note: please use zImage as a secondary kernel. It can be found in the
-  build/linux-windriver/linux-<bsp name>-<kernel type>-build/arch/arm/boot/
-directory.
-
-For more detailed information about kdump, please refer to
-Documentation/kdump/kdump.txt in the kernel source tree.
+NOTE: kdump feature is not supported.
 
 5.3 Ramdisk
 -----------

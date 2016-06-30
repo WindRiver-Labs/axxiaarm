@@ -39,6 +39,7 @@ This BSP supports the following features.
   o Bus
 	+ I2C: On-Chip I2C controller
 	+ SPI: PL022 SPI bus controller in master mode
+	+ PCIe: On-Chip PCIe controller (Axxiaarm64 simulator only)
 
   o USB
 	+ USB Host: CI13612A EHCI USB Host controller
@@ -61,7 +62,7 @@ the corresponding drivers was only validated by init process.
 
 The following features are not supported and validated:
 	x Ethernet: SMC91X(Axxiaarm64 simulator only)
-	x PCIe: On-Chip PCIe controller
+	x PCIe: On-Chip PCIe controller(Axxiaarm only)
 	x SD/MMC: ARM AMBA Multimedia Card Interface
 
 4. Axxiaarm BSP Notes
