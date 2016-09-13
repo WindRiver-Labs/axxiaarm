@@ -6,6 +6,7 @@ KERNEL_DEVICETREE_axxiaarm64 = "intel/axm5604-sim.dtb \
 				intel/axm5606-emu.dtb \
 				intel/axm5608-sim.dtb \
 				intel/axm5616-sim.dtb \
+				intel/axm5616-victoria.dtb \
 				intel/axc6704-sim.dtb \
 				intel/axc6704-emu.dtb \
 				intel/axc6716-sim.dtb \
