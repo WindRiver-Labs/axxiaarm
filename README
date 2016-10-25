@@ -105,17 +105,32 @@ network values:
           ip=$(ipaddr)::$(gatewayip):$(netmask)::eth0:off
  u-boot=> bootm 0x4000000 - 0x4500000
 
-5. Axxiaarm board Features
+5. Multilib
+==========
+
+By default, when you configure project with --enable-board=axxiaarm64,
+the BSP is configured as a 64-bit kernel and 64-bit userspace.
+
+To add 32-bit multilib support for a specific package, please use:
+
+   make lib32-<pkg-name>
+
+If a full 32-bit filesystem is necessary, 64-bit kernel and 32-bit rootfs combination,
+please append the following into your project configuration command:
+
+   --enable-multilib=lib32
+
+6. Axxiaarm board Features
 ==========================
 
-5.1 OProfile
+6.1 OProfile
 ------------
 
 This BSP does not have an available hardware performance counter,
 so OProfile must resort to the timer mode. If you are using OProfile
 you need to add "oprofile.timer=1" to the kernel boot options.
 
-5.2 kexec/kdump
+6.2 kexec/kdump
 ---------------
 
 For discussion purposes, some useful terminology will be described here.
@@ -137,7 +152,7 @@ And it requires the following adjustments to the default kernel configuration:
 
 NOTE: kdump feature is not supported.
 
-5.3 Ramdisk
+6.3 Ramdisk
 -----------
 
 Before using ramdisk, please set initrd_high to 0xffffffff to implies that the
@@ -152,19 +167,29 @@ And the ramdisk must be download to the lowmem region.
 Note:
 lowmem: linux memory that is always mapped into the kernel's address space.
 
-6. Axxiaarm64 simulator
+7. Axxiaarm64 simulator
 =======================
 
 To boot up the WRLinux on the Intel simulator, users should ask for simulator
 installation and setup guide from Intel Corp first, then follow the guide, set
 up a workable environment for the simulator.
 
-7. Axxiaarm64 Features
+8. Axxiaarm64 Features
 ======================
 
-7.1 kgdboe and kgdboc under simulator
+8.1 kgdboe and kgdboc under simulator
 -------------------------------------
 
 Currently, we don't have a workable way to bind the simulator ethernet card
 and simulator serial port to the host machine, so kgdboe and kgdboc are
 not tested under simulator.
+
+8.2 kdump and kexec
+-------------------
+
+Both simulator and axm5616 Victoria board do not support kexec and kdump.
+
+8.3 OProfile
+------------
+
+Both simulator and axm5616 Victoria board do not support OProfile.
