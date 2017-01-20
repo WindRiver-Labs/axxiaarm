@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb"
 # This revision corresponds to the tag "lsi_axxia_u-boot_5.8.1.66"
 SRCREV = "5664e4d265021759850b7002a7647393a7db0eea"
 
+COMPATIBLE_MACHINE = "^axxiaarm$"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/lsigithub/lsi_axxia_uboot_public.git;branch=lsi-v2013.01.01"

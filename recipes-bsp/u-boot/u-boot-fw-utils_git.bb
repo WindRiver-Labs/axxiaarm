@@ -8,7 +8,7 @@ DEPENDS = "mtd-utils"
 SRCREV = "8bf8eca3223bba98e161b30fc6110d1edf0be9c2"
 
 PV = "2013.01.01+git${SRCREV}"
-
+COMPATIBLE_MACHINE = "^axxiaarm$"
 SRC_URI = "git://github.com/lsigithub/lsi_axxia_uboot_public.git;branch=lsi-v2013.01.01"
 
 S = "${WORKDIR}/git"
