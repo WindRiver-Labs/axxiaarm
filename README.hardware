@@ -14,22 +14,14 @@ Table of Contents
 
 This BSP supports the following boards:
 
-  + Intel ARM Amarillo: ARM Cortex A15 Processor, only run with axxiaarm.
-  + Intel ARM64 axm5616 Victoria Board: ARM Cortex A57 Processor, only run with axxiaarm64.
-  + Intel ARM64 axm56xx simulator, only run with axxiaarm64.
+  + Intel ARM AXM5516 Amarillo: ARM Cortex A15 Processor, only run with axxiaarm.
+  + Intel ARM64 AXM5616 Victoria: ARM Cortex A57 Processor, only run with axxiaarm64
 
 2. Change History
 =================
 
-  - 2016/09 (US86701): Wind River Linux 8.0 RCPL11, add support for
-                       Intel Axxiaarm64 axm5616 Victoria Board.
-  - 2016/07 (US81947): Wind River Linux 8.0 RCPL07, add CGL support for
-                       Intel Axxiaarm64 simulator and consolidate git branch
-  - 2016/06 (US68839): Wind River Linux 8.0 RCPL06, initial support
-                       Intel Axxiaarm64 simulator(standard and preempt-rt).
-  - 2016/03 (US72963): Add a basic CGL kernel type support.
-  - 2016/01 (US66955): Wind River Linux 8.0 RCPL01, initial standard support
-                       LSI ARM Axxia (standard and preempt-rt)
+  - 2017/06 (US92883): WRLinux 9.0 RCPL04, add AXM5516 and AXM5616 support
+					   Based on Linux-yocto-4.9.
 
 3. BSP Features
 ===============
@@ -42,32 +34,28 @@ This BSP supports the following features.
   o Bus
 	+ I2C: On-Chip I2C controller
 	+ SPI: PL022 SPI bus controller in master mode
-	+ PCIe: On-Chip PCIe controller (Axxiaarm64 simulator only)
 
   o USB
-	+ USB Host: CI13612A EHCI USB Host controller
-	+ USB Host: DWC3 USB Host controller (support USB2.0 only)
+	+ USB Host: CI13612A EHCI USB 2.0 Host controller (AXM5516 Only)
+	+ USB Host: DWC3 XHCI USB 3.0 Host controller (AXM5616 Only)
 
   o Network
-	+ Ethernet: acp-femac(Axxiaarm only)
-	+ Ethernet: nemac(Axxiaarm64 axm5616 only)
+	+ Ethernet: acp-femac (AXM5516 Only)
+	+ Ethernet: acp-nemac (AXM5616 Only)
 
   o Storage
-	+ SPI flash: m25p80
+	+ SPI flash: 16M Bytes (S25FL129P1)
 
   o Misc Devices
 	+ DMA: On-Chip smart direct memory access controller
 	+ UART: On-Chip High-Speed UART
-
-Note: Since there are no I2C, PCIe, SD/MMC, USB and DMA devices on the simulator,
-the corresponding drivers was only validated by init process.
+	+ HW Monitor: ADT7467 temperature sensor, connected via I2C bus
 
 3.2 Unsupported Features
 ========================
 
 The following features are not supported and validated:
-	x Ethernet: SMC91X(Axxiaarm64 simulator only)
-	x PCIe: On-Chip PCIe controller(Axxiaarm and Axxiaarm64 axm5616)
+	x PCIe: On-Chip PCIe controller
 	x SD/MMC: ARM AMBA Multimedia Card Interface
 
 4. Axxiaarm BSP Notes
@@ -82,78 +70,34 @@ A15(ARM Cortex a15 cpu). The module on the rear panel of EVA board is EP4,
 
 For complete LSI ARM Amarillo details please directly contact LSI.
 
-4.2 Target Notes
+4.2 Validated Board Info
 ------------------
 
 NOTE: This BSP is only validated in the following environment, if used in a
 different environment it may run into unknown issues.
 
-	LSI Amarillo:
-	-------------
+	Intel AXM5516 Amarillo:
+	----------------------
 	Processor:		ARMv7 Processor rev 2
 	BootLoader:		U-Boot
-	BootLoader Version:	5.8.1.66
-
-4.2.2 PCI-Express
------------------
-The PCI-Express module on Amarillo board is multiplexed with SRIO signals and an
-EP4 daughter card (a Freescale P5020 system) is connected to the PCIe slot. The
-interface can be configured to PCIe x4 root complex by on-board DIP switch SW1
-on the front panel:
-
- SW1.3 = ON
- SW1.4 = ON
- SW1.5 = ON
-
-To validate the PCIe feature, At first, Switch the EP4 daughter card to endpoint mode,
-The next to update the 1rd, 2rd u-boot and parameter file to the spi flash of
-the Amarillo.
-
-Note: The Amarillo PCIe feature is only validated with enumeration function due
-to the restriction of the EP4 card.
+	BootLoader Version:	lsi_axxia_u-boot_5.8.1.66
 
 5. Axxiaarm64 BSP Notes
-==============================
+============
 
 5.1 Hardware Description
 ------------------------
 
-For complete Intel ARM64 axm56xx simulator and axm5616 Victoria board details please
-directly contact Intel.
+For complete Intel ARM64 axm56xx Victoria details please directly contact Intel.
 
-5.2 Target Notes
+5.2 Validated Board Info
 ----------------
 
-5.2.1 axm56xx simulator
------------------------
-NOTE:
-1. ATF and U-Boot are not from SDK binary images, they are built locally.
+NOTE: This BSP is only validated in the following environment, if used in a
+different environment it may run into unknown issues.
 
-   ATF is based on axxia_atf repo, the top commit is
-   ad701ffdb2e0("axxia: Add the DSP Clusters to the Coherency Domain").
-
-   U-Boot is based on axxia_u-boot_private repo, the top commit is
-   745f8e64412b("board/axxia: Update AVS Code").
-
-2. This BSP is only validated in the following environment, if used in a
-   different environment it may run into unknown issues.
-
-   User can ask Intel to get SDK binaries.
-
-	Processor:             Intel axm56xx simulator
-	Board Revision:        N/A
-	BootLoader:            U-Boot
-	BootLoader Version:    U-Boot 2015.10-00001-g745f8e6 (Apr 13 2016 - 16:39:34 +0800)
-	ASE:                   ASE_1.4.0.040
-
-5.2.2 axm56xx Victoria board
-----------------------------
-1. This BSP is only validated in the following environment, if used in a
-   different environment it may run into unknown issues.
-
-   User can ask Intel to get SDK binaries.
-
-	Processor:             Intel axm5616
-	Board Revision:        N/A
-	BootLoader:            U-Boot
-	BootLoader Version:    U-Boot 2015.10-00001-g8a2da35 (Sep 14 2016 - 14:32:31 +0200)
+	Intel AXM5616 Victoria:
+	----------------------
+	Processor:		ARMv8 Processor rev 3
+	BootLoader:		U-Boot
+	BootLoader Version: u-boot_v2015.10_axxia_1.57
