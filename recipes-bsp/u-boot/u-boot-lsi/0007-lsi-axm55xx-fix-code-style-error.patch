@@ -1,0 +1,38 @@
+From e614a22a2d0ea5aadf8c1cbbb8e7324c00c35cd8 Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Fri, 16 Jun 2017 14:37:55 +0800
+Subject: [PATCH] lsi-axm55xx: fix code style error
+
+In file included from axxia_initialize.c:47:0:
+../common/ncp_elm.c: In function 'ncp_elm_init':
+../common/ncp_elm.c:68:7: error: this 'else' clause does not guard... [-Werror=misleading-indentation]
+	else
+	^~~~
+../common/ncp_elm.c:71:9: note: ...this statement, but the latter is misleadingly indented as if it is guarded by the 'else'
+	while ( 0 < sdramSize) {
+	^~~~~
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ board/lsi/common/ncp_elm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/lsi/common/ncp_elm.c b/board/lsi/common/ncp_elm.c
+index 47cb3e6..c38948d 100644
+--- a/board/lsi/common/ncp_elm.c
++++ b/board/lsi/common/ncp_elm.c
+@@ -65,9 +65,9 @@ ncp_elm_init(
+          */
+       if (2 == parms->num_interfaces)
+         sdramSize = parms->totalSize >> 1;
+-      else
++      else {
+         sdramSize = parms->totalSize;
+-
++      }
+         while ( 0 < sdramSize) {
+             ++ddrBits;
+             sdramSize >>= 1;
+-- 
+1.9.1
+
