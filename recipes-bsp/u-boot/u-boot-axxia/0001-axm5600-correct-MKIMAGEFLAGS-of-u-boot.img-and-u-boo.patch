@@ -1,0 +1,43 @@
+From 4410d61165bda85ed4f950a5163b5aa48d13253e Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Wed, 28 Jun 2017 20:18:33 +0800
+Subject: [PATCH] axm5600: correct MKIMAGEFLAGS of u-boot.img and
+ u-boot-spl.img
+
+Once use mkimage to make header, should pass "-A arm64" but not
+"-A arm". Or else axm56xx board will throw error as below:
+
+Checking U-Boot Image A
+        Wrong Architecture!
+Checking U-Boot Image B
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 4363293..9f6841f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -893,7 +893,7 @@ quiet_cmd_cpp_cfg = CFG     $@
+ cmd_cpp_cfg = $(CPP) -Wp,-MD,$(depfile) $(cpp_flags) $(LDPPFLAGS) -ansi \
+ 	-DDO_DEPS_ONLY -D__ASSEMBLY__ -x assembler-with-cpp -P -dM -E -o $@ $<
+ 
+-MKIMAGEFLAGS_u-boot.img = -A $(ARCH) -T firmware -C none -O u-boot \
++MKIMAGEFLAGS_u-boot.img = -A arm64 -T firmware -C none -O u-boot \
+ 	-a $(CONFIG_SYS_TEXT_BASE) -e $(CONFIG_SYS_UBOOT_START) \
+ 	-n "U-Boot $(UBOOTRELEASE) for $(BOARD) board"
+ 
+@@ -994,7 +994,7 @@ u-boot.sb: u-boot.bin spl/u-boot-spl.bin
+ # SPL image (with mkimage header) and not the binary. Otherwise the resulting image
+ # which is loaded/copied by the ROM bootloader to SRAM doesn't fit.
+ # The resulting image containing both U-Boot images is called u-boot.spr
+-MKIMAGEFLAGS_u-boot-spl.img = -A $(ARCH) -T firmware -C none \
++MKIMAGEFLAGS_u-boot-spl.img = -A arm64 -T firmware -C none \
+ 	-a $(CONFIG_SPL_TEXT_BASE) -e $(CONFIG_SPL_TEXT_BASE) -n XLOADER
+ spl/u-boot-spl.img: spl/u-boot-spl.bin FORCE
+ 	$(call if_changed,mkimage)
+-- 
+1.9.1
+

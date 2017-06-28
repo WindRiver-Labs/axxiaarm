@@ -1,0 +1,30 @@
+From 73afb04e3d9d650fbb5bac36ef10922135310cce Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Mon, 26 Jun 2017 16:24:14 +0800
+Subject: [PATCH] axm56xx: fix the u-boot compile fail
+
+This patch fix compile error as below:
+
+aarch64-wrs-linux-ld.bfd: cannot find -lgcc
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 4363293..6ac70dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -686,7 +686,7 @@ u-boot-main := $(libs-y)
+ ifeq ($(CONFIG_USE_PRIVATE_LIBGCC),y)
+ PLATFORM_LIBGCC = arch/$(ARCH)/lib/lib.a
+ else
+-PLATFORM_LIBGCC := -L $(shell dirname `$(CC) --sysroot=$(SYSROOT) $(c_flags) -print-libgcc-file-name`) -lgcc
++PLATFORM_LIBGCC := -L $(shell dirname `$(CC) $(c_flags) -print-libgcc-file-name`) -lgcc
+ endif
+ PLATFORM_LIBS += $(PLATFORM_LIBGCC)
+ export PLATFORM_LIBS
+-- 
+1.9.1
+
