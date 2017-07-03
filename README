@@ -259,8 +259,9 @@ Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
 5.2.2 kdump
 -----------
 For boot kernel:
-To reserve a memory region for the capture kernel, pass "crashkernel=256M@256M"
-via the command line.
+Now kdump in axm55xx can only support memory size less than 4G because that
+32-bit elf header can't describe a vmcore the memory size of which is bigger
+than 4G. So need pass "crashkernel=256M@256M mem=4096M" via the command line.
 
 For capture kernel:
 Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
