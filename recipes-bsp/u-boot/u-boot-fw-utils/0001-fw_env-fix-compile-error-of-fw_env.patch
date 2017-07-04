@@ -1,0 +1,42 @@
+From b0c94659ef4f7eb69d4a6f73d30e13f27317406f Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Tue, 4 Jul 2017 10:39:29 +0800
+Subject: [PATCH] fw_env: fix compile error of fw_env
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fix compile error as below:
+
+ fw_env.c:64:2: error: unknown type name ‘uint8_t’
+   uint8_t mtd_type;  /* type of the MTD device */
+   ^
+ fw_env.c:89:2: error: unknown type name ‘uint32_t’
+   uint32_t crc; /* CRC32 over data bytes    */
+   ^
+ fw_env.c:94:2: error: unknown type name ‘uint32_t’
+   uint32_t crc; /* CRC32 over data bytes    */
+   ^
+ fw_env.c:107:2: error: unknown type name ‘uint32_t’
+   uint32_t  *crc;
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ tools/env/fw_env.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/env/fw_env.c b/tools/env/fw_env.c
+index 37b60b80..cc829b0 100644
+--- a/tools/env/fw_env.c
++++ b/tools/env/fw_env.c
+@@ -42,6 +42,7 @@
+ # include <linux/mtd/mtd.h>
+ #else
+ # define  __user	/* nothing */
++# include <stdint.h>
+ # include <mtd/mtd-user.h>
+ #endif
+ 
+-- 
+1.9.1
+
