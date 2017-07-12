@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=1;endline=6;md5=157ab8408beab40cd8ce
 # This revision corresponds to the tag "u-boot_v2015.10_axxia_1.57"
 SRCREV = "7125f93af0c0987228b9fb322213af04a36dda58"
 
+UBOOT_MACHINE_axxiaarm64 = "axm5600_defconfig"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 COMPATIBLE_MACHINE = "^axxiaarm64$"
