@@ -100,7 +100,7 @@ be got from layers/wr-bsps/axxiaarm/bootloader/axm55xx.
 
  u-boot-spl.bin		--- The 2nd stage boot loader.
  u-boot.img			--- The 3rd stage boot loader.
- AXM55xx_1p0.bin				--- The parameter table file for boot loader.
+ AXM55xx_1p0.bin	--- The parameter table file for boot loader.
 
 4.1.2 Updating the 2nd stage boot loader:
 --------------------------------------
@@ -148,11 +148,13 @@ memory.
 
 4.2.1 u-boot images:
 -------------------
-The images as below can be got from layers/wr-bsps/axxiaarm/bootloader/axm56xx.
+The u-boot-spl.img and u-boot.img are built from the git source code. They
+are in the build/tmp/deploy/images/axxiaarm64 direcotry.The images can also
+be got from layers/wr-bsps/axxiaarm/bootloader/axm56xx.
 
  u-boot-spl.img		--- The 2nd stage boot loader.
  u-boot.img			--- The 3rd stage boot loader.
- AXM5600.bin				--- The parameter table file for boot loader.
+ AXM5600.bin		--- The parameter table file for boot loader.
 
 4.2.2 Updating the 2nd stage boot loader:
 --------------------------------------
@@ -249,7 +251,7 @@ capture kernel - the kernel that you reboot into after a boot kernel crash.
 To build the boot or capture kernel, use the following option with the configure
 command for your project:
 
-     --with-template=feature/kexec
+     --template=feature/kexec,feature/kdump
 
 5.2.1 kexec
 -----------
@@ -297,7 +299,7 @@ you need to add "oprofile.timer=1" to the kernel boot options.
 To build the boot or capture kernel, use the following option with the configure
 command for your project:
 
-     --with-template=feature/kexec
+     --template=feature/kexec,feature/kdump
 
 6.2.1 kexec
 -----------
@@ -311,7 +313,9 @@ To reserve a memory region for the capture kernel, pass "crashkernel=256M@0"
 via the command line.
 
 For capture kernel:
-Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
+Please use "Image" as boot capture kernel which can be found in the path
+build/tmp/deploy/images/axxiaarm64. Before boot capture kernel, please add
+"maxcpus=1" to the boot parameter.
 
 6.3 Ramdisk
 -----------
@@ -334,11 +338,12 @@ lowmem: linux memory that is always mapped into the kernel's address space.
 By default, when you configure project with --enable-board=axxiaarm64,
 the BSP is configured as a 64-bit kernel and 64-bit userspace.
 
-To add 32-bit multilib support for a specific package, please use:
+Multilib is also supported by this BSP.
 
-   make lib32-<pkg-name>
+1. To add 32-bit multilib support for an existing project, use:
 
-If a full 32-bit filesystem is necessary, 64-bit kernel and 32-bit rootfs combination,
-please append the following into your project configuration command:
+    bitbake lib32-wrlinux-image-glibc-std
 
-   --enable-multilib=lib32
+2. To add 32-bit mulilib support for a specific package, use:
+
+    bitbake lib32-<pkg-name>
