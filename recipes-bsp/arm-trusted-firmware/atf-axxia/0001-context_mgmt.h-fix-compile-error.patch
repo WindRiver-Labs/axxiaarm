@@ -1,0 +1,44 @@
+From 2a4fbbbfe3aeb69b29f3bb617d0ecb43f9ee16af Mon Sep 17 00:00:00 2001
+From: Wang Quanyang <quanyang.wang@windriver.com>
+Date: Sat, 24 Feb 2018 15:02:37 +0800
+Subject: [PATCH] context_mgmt.h: fix compile error
+
+The "inline" functions will be treated as "extern inline" by GCC
+with option "--enable-C99". When the definition and declaration of the inline
+function is in the same file, this function should be defined as "static inline".
+
+This patch fix compile error as below:
+git/build/axxia/debug/bl31/context_mgmt.o: In function `cm_prepare_el3_exit':
+git/common/context_mgmt.c:251: undefined reference to `cm_set_next_context'
+git/common/context_mgmt.c:251:(.text.cm_prepare_el3_exit+0x78): relocation truncated to fit: R_AARCH64_JUMP26 against undefined symbol `cm_set_next_context'
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ include/common/context_mgmt.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/common/context_mgmt.h b/include/common/context_mgmt.h
+index 11786a1..11e9e9f 100644
+--- a/include/common/context_mgmt.h
++++ b/include/common/context_mgmt.h
+@@ -55,7 +55,7 @@ void cm_set_context_by_index(unsigned int cpu_idx,
+ 			     unsigned int security_state);
+ void *cm_get_context(uint32_t security_state);
+ void cm_set_context(void *context, uint32_t security_state);
+-inline void cm_set_next_context(void *context);
++static inline void cm_set_next_context(void *context);
+ void cm_init_context(uint64_t mpidr,
+ 		     const struct entry_point_info *ep) __deprecated;
+ void cm_init_my_context(const struct entry_point_info *ep);
+@@ -80,7 +80,7 @@ uint32_t cm_get_scr_el3(uint32_t security_state);
+  * return. This initializes the SP_EL3 to a pointer to a 'cpu_context' set for
+  * the required security state
+  ******************************************************************************/
+-inline void cm_set_next_context(void *context)
++static inline void cm_set_next_context(void *context)
+ {
+ #if DEBUG
+ 	uint64_t sp_mode;
+-- 
+2.7.4
+

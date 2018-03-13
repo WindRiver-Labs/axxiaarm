@@ -42,10 +42,10 @@ SPL_SYMLINK = "${SPL_FILE}-${MACHINE}.${SPL_SUFFIX}"
 
 do_compile_prepend() {
 	install -d ${B}/spl
-	cp ${STAGING_DATADIR}/atf/bl31.o ${B}/spl/bl31.o
+	cp ${STAGING_DIR}/atf/bl31.o ${B}/spl/bl31.o
 }
 do_compile_append() {
-	mkimage -A arm64 -T firmware -C none -a 0 -e 0x00187001 -n u-boot-spl -d ${B}/spl/u-boot-spl.bin ${B}/spl/u-boot-spl.img
+	${B}/tools/mkimage -A arm64 -T firmware -C none -a 0 -e 0x00187001 -n u-boot-spl -d ${B}/spl/u-boot-spl.bin ${B}/spl/u-boot-spl.img
 }
 do_install () {
     install -d ${D}/boot
