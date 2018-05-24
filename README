@@ -75,7 +75,7 @@ To get a list of patches applied to the kernel specific to this BSP
 along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
-  # cd build/tmp/work-shared/axxiaarm/kernel-source
+  # cd build/tmp-glibc/work-shared/axxiaarm/kernel-source
 	# git whatchanged standard/base..
 
 4. Boot Instructions
@@ -95,8 +95,8 @@ memory.
 4.1.1 u-boot images:
 --------------------
 The u-boot-spl.bin and u-boot.img are built from the git source code. They
-are in the build/tmp/deploy/images/axxiaarm direcotry.The images can also
-be got from layers/wr-bsps/axxiaarm/bootloader/axm55xx.
+are in the build/tmp-glibc/deploy/images/axxiaarm direcotry.The images can also
+be got from layers/axxiaarm/bootloader/axm55xx.
 
  u-boot-spl.bin		--- The 2nd stage boot loader.
  u-boot.img			--- The 3rd stage boot loader.
@@ -149,8 +149,8 @@ memory.
 4.2.1 u-boot images:
 -------------------
 The u-boot-spl.img and u-boot.img are built from the git source code. They
-are in the build/tmp/deploy/images/axxiaarm64 direcotry.The images can also
-be got from layers/wr-bsps/axxiaarm/bootloader/axm56xx.
+are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.The images can also
+be got from layers/axxiaarm/bootloader/axm56xx.
 
  u-boot-spl.img		--- The 2nd stage boot loader.
  u-boot.img			--- The 3rd stage boot loader.
@@ -314,7 +314,7 @@ via the command line.
 
 For capture kernel:
 Please use "Image" as boot capture kernel which can be found in the path
-build/tmp/deploy/images/axxiaarm64. Before boot capture kernel, please add
+build/tmp-glibc/deploy/images/axxiaarm64. Before boot capture kernel, please add
 "maxcpus=1" to the boot parameter.
 
 6.3 Ramdisk
