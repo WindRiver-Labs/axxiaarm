@@ -16,10 +16,13 @@ SRC_URI_axxiaarm64 = "git://github.com/axxia/axxia_u-boot.git;branch=axxia-dev"
 SRC_URI_append = " file://0001-fw_env-fix-compile-error-of-fw_env.patch\
 		 "
 
+SRC_URI_append_axxiaarm64 = " file://0001-tools-fix-cross-compiling-tools-when-HOSTCC-is-overr.patch\
+		 "
+
 S = "${WORKDIR}/git"
 INSANE_SKIP_${PN}_append = "already-stripped"
 EXTRA_OEMAKE_axxiaarm = 'CROSS_COMPILE=${TARGET_PREFIX} HOSTCC="${CC}" HOSTSTRIP="true"'
-EXTRA_OEMAKE_axxiaarm64 = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} ${TOOLCHAIN_OPTIONS}"'
+EXTRA_OEMAKE_axxiaarm64 = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${CC} ${CFLAGS} ${LDFLAGS}" HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}"'
 
 COMPATIBLE_HOST_axxiaarm64="aarch64"
 inherit uboot-config
