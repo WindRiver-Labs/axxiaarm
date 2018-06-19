@@ -20,8 +20,8 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2017/06 (US92883): WRLinux 9.0 RCPL04, add AXM5516 and AXM5616 support
-					   Based on Linux-yocto-4.9.
+  - 2018/06 (US107617): WRLinux 10.17 RCPL08, add AXM5516 and AXM5616 support
+					   Based on Linux-yocto-4.12.
 
 3. BSP Features
 ===============

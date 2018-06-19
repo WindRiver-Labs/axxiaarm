@@ -34,7 +34,7 @@ To build an axxiaarm64 BSP, use:
 
 License
 -------
-Copyright (C) 2016 Wind River Systems, Inc.
+Copyright (C) 2017 Wind River Systems, Inc.
 
 The right to copy, distribute or otherwise make use of this software may
 be licensed only pursuant to the terms of an applicable Wind River license
@@ -44,29 +44,23 @@ herein. All rights not licensed by Wind River are reserved by Wind River.
 Source code included in tree for individual recipes is under the LICENSE
 stated in each recipe (.bb file) unless other stated.
 
-2. BSP Kernel and RootFS Combination
-====================================
+2. BSP Kernel and Distros
+=========================
 
-The validity of WindRiver Linux kernel and RootFS combination for this BSP is
-in the table.
-The leftmost column of the table is the kernel type, and the top line is the
-RootFS type.
-'Y' in each content cell stands for the combination is supported; 'N' stands
-for not supported:
+The following table summarizes the valid Wind River Linux distros for this BSP.
+'Y' in each content cell stands for supported; 'N' stands for not supported:
 
---------------------------------------------------------------------
-| kernel/rootfs | glibc_std | glibc_small | glibc_cgl | glibc_tiny |
---------------------------------------------------------------------
-|   standard    |     Y     |      Y      |     N     |     N      |
---------------------------------------------------------------------
-|   preempt_rt  |     Y     |      Y      |     N     |     N      |
---------------------------------------------------------------------
-|   cgl         |     N     |      N      |     Y     |     N      |
---------------------------------------------------------------------
+  +--------------+-------------+-------------+-------------+
+  | valid/distro |   wrlinux   | wrlinux-cgl | wrlinux-ovp |
+  +--------------+-------------+-------------+-------------+
+  |    valid     |      Y      |      Y      |      N      |
+  +--------------+-------------+-------------+-------------+
 
-Note:
-1. With regard to the kernel and RootFS type, please refer to WindRiver Linux
-specification for details.
+For the supported kernel type for this BSP, please check the TARGET_SUPPORTED_KTYPES
+by running 'bitbake -e | grep "^TARGET_SUPPORTED_KTYPES"'.
+
+Note: The preempt-rt kernel type can be used with this BSP/Machine.
+
 
 3. Board Specific Patches
 =========================
