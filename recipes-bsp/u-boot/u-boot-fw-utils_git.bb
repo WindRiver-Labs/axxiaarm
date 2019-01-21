@@ -13,10 +13,12 @@ PV = "2013.01.01+git${SRCREV}"
 UBOOT_MACHINE_axxiaarm64 = "axm5600_defconfig"
 SRC_URI_axxiaarm = "git://github.com/lsigithub/lsi_axxia_uboot_public.git;nobranch=1"
 SRC_URI_axxiaarm64 = "git://github.com/axxia/axxia_u-boot.git;branch=axxia-dev"
-SRC_URI_append = " file://0001-fw_env-fix-compile-error-of-fw_env.patch\
-		 "
+
+SRC_URI_append_axxiaarm = " file://0001-fw_env-fix-compile-error-of-fw_env.patch\
+                "
 
 SRC_URI_append_axxiaarm64 = " file://0001-tools-fix-cross-compiling-tools-when-HOSTCC-is-overr.patch\
+			      file://0001-fw_env-fix-compile-error-of-fw_env.patch\
 		 "
 
 S = "${WORKDIR}/git"
