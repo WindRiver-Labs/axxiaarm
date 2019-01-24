@@ -15,6 +15,7 @@ COMPATIBLE_MACHINE = "^axxiaarm$"
 SRC_URI = "git://github.com/lsigithub/lsi_axxia_uboot_public.git;nobranch=1"
 SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
 		   file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
+		   file://0001-axxia-fix-compile-error.patch \
 		   file://0006-lsi-axm55xx-fix-sha1-compile-error.patch \
 		   file://0007-lsi-axm55xx-fix-code-style-error.patch \
 		   file://0008-compiler-.h-sync-include-linux-compiler-.h-with-Linu.patch \

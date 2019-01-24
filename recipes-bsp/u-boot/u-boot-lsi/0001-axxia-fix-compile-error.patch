@@ -1,0 +1,46 @@
+From c1ae72e257f981002538e30dd91420c6d3e100ad Mon Sep 17 00:00:00 2001
+From: Wang Quanyang <quanyang.wang@windriver.com>
+Date: Mon, 14 Jan 2019 22:22:24 -0500
+Subject: [PATCH] axxia: fix compile error
+
+This patch fix compile error as below:
+
+| axxia_clocks.c: In function 'acp_clock_get':
+| axxia_clocks.c:394:16: error: bitwise comparison always evaluates to false [-Werror=tautological-compare]
+|    } else if (1 == (csw & 0x00000030)) {
+|                 ^~
+| axxia_clocks.c:409:16: error: bitwise comparison always evaluates to false [-Werror=tautological-compare]
+|    } else if (1 == (csw & 0x0000000c)) {
+|                 ^~
+| cc1: all warnings being treated as errors
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ board/lsi/axxia-arm/axxia_clocks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/lsi/axxia-arm/axxia_clocks.c b/board/lsi/axxia-arm/axxia_clocks.c
+index 57d4273..d362c7b 100644
+--- a/board/lsi/axxia-arm/axxia_clocks.c
++++ b/board/lsi/axxia-arm/axxia_clocks.c
+@@ -391,7 +391,7 @@ acp_clock_get(acp_clock_t clock, ncp_uint32_t *frequency)
+ 
+ 		if (0 == (csw & 0x00000030)) {
+ 			*frequency = CLK_REF0 / 1000;
+-		} else if (1 == (csw & 0x00000030)) {
++		} else if ((0x1 << 4) == (csw & 0x00000030)) {
+ 			ncr_read32(NCP_REGION_ID(0x155,3), 0x0, &prms);
+ 			*frequency = get_pll(prms, 1);
+ 		} else {
+@@ -406,7 +406,7 @@ acp_clock_get(acp_clock_t clock, ncp_uint32_t *frequency)
+ 
+ 		if (0 == (csw & 0x0000000c)) {
+ 			*frequency = CLK_REF0 / 1000;
+-		} else if (1 == (csw & 0x0000000c)) {
++		} else if ((0x1 << 2) == (csw & 0x0000000c)) {
+ 			ncr_read32(NCP_REGION_ID(0x155,5), 0x0, &prms);
+ 			*frequency = get_pll(prms, 1);
+ 		} else {
+-- 
+2.7.4
+
