@@ -43,3 +43,4 @@ do_install () {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+COMPATIBLE_MACHINE = "(axxiaarm|axxiaarm64)"
