@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/axxia/axxia_u-boot.git;branch=axxia-dev"
 
 SRC_URI_append = " file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
 			   file://0001-axm56xx-fix-the-u-boot-compile-fail.patch \
+			   file://0001-ARMv8-add-GOT-sections-to-the-list-of-sections-copie.patch \
 			   file://0001-axm5600-correct-MKIMAGEFLAGS-of-u-boot.img-and-u-boo.patch \
 		 "
 DEPENDS = "atf-axxia"

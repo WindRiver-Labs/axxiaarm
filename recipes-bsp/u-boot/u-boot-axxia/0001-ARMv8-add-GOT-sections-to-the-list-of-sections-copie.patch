@@ -1,0 +1,49 @@
+From 4b0d506ed3b4f77649346d45b349169a60a2b233 Mon Sep 17 00:00:00 2001
+From: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Date: Fri, 24 Mar 2017 19:08:55 +0100
+Subject: [PATCH] ARMv8: add GOT sections to the list of sections copied
+
+Recent Linux distributions (e.g. Debian 9) include cross-compilers for
+AArch64, but only for the aarch64-linux-gnu triplet only. It can thus
+be expected that users will attempt to use the system cross-compiler
+(instead of an aarch64-elf variant) to compile U-Boot for their ARMv8
+target systems.
+
+One key differences between an aarch64-linux-gnu and an aarch64-elf
+compiler are the default settings regarding position-independent: with
+the aarch64-linux-gnu compiler, the default will create and use the
+global offset table.
+
+This change-set adjusts the list of sections copied on ARMv8 to include
+the GOT sections. With this added, the list matches the previous setup
+for AArch32 closely.
+
+Note that this is not an 'academic' issue, but was in fact encountered
+by our QA during testing of the RK3399-Q7 BSP and resulted in an
+early failure of the SPL stage during FDT setup.
+
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Tested-by: Klaus Goger <klaus.goger@theobroma-systems.com>
+Reviewed-by: Simon Glass <sjg@chromium.org>
+Reviewed-by: Tom Rini <trini@konsulko.com>
+---
+ arch/arm/config.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/config.mk b/arch/arm/config.mk
+index 08d7d1bc69..907c69371b 100644
+--- a/arch/arm/config.mk
++++ b/arch/arm/config.mk
+@@ -120,7 +120,8 @@ endif
+ 
+ # limit ourselves to the sections we want in the .bin.
+ ifdef CONFIG_ARM64
+-OBJCOPYFLAGS += -j .text -j .rodata -j .data -j .u_boot_list -j .rela.dyn
++OBJCOPYFLAGS += -j .text -j .rodata -j .data -j .u_boot_list -j .rela.dyn \
++				-j .got -j .got.plt
+ else
+ OBJCOPYFLAGS += -j .text -j .secure_text -j .rodata -j .hash -j .data -j \
+ 	.got -j .got.plt -j .u_boot_list -j .rel.dyn
+-- 
+2.17.1
+
