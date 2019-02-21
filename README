@@ -341,3 +341,54 @@ Multilib is also supported by this BSP.
 2. To add 32-bit mulilib support for a specific package, use:
 
     bitbake lib32-<pkg-name>
+
+7. Creating Partitioned Images(WIC)
+===================================
+
+You can use the OpenEmbedded Image Creator, wic, to create a properly
+partitioned image on an USB disk. The wic command generates partitioned images
+from existing OpenEmbedded build artifacts.
+For more information about WIC, see:
+
+http://www.yoctoproject.org/docs/2.2/mega-manual/mega-manual.html#creating-partitioned-images
+
+This BSP supports USB card disk images.
+After building the project, you will have a WIC image under the directory
+tmp-glibc/deploy/images/<bsp name>/, for example:
+
+tmp-glibc/deploy/images/axxiaarm/wrlinux-image-glibc-std-axxiaarm.wic
+
+You can then write the output image to an USB disk.
+
+7.1 Burn images to USB disk
+---------------------------
+
+To burn u-boot and WIC images to an USB disk, you need to execute below command:
+
+# dd if=wrlinux-image-glibc-std-axxiaarm.wic of=/dev/your_sd_dev
+
+7.2 Set u-boot env
+-----------------
+
+The axm55xx board can boot by setting the following uboot environment variables:
+
+=> setenv bootfile uImage
+=> setenv fdtimage axm5516-amarillo.dtb
+=> setenv fdt_addr 0x5000000
+=> setenv loadaddr 0x4000000
+=> setenv usbboot 'setenv bootargs console=ttyAMA0,9600 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
+=> setenv usbload 'usb start;ext4load usb 0:1 ${loadaddr} ${bootfile};ext4load usb 0:1 ${fdt_addr} ${fdtimage}'
+=> setenv bootcmd 'run usbload; run usbboot'
+=> saveenv; run bootcmd;
+
+
+The axm56xx board can boot by setting the following uboot environment variables:
+
+=> setenv bootfile uImage
+=> setenv fdtimage axm5616-victoria.dtb
+=> setenv fdt_addr 0xa4800000
+=> setenv loadaddr 0x4000000
+=> setenv usbboot 'setenv bootargs console=ttyAMA0 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
+=> setenv usbload 'usb start;ext2load usb 0:1 ${loadaddr} ${bootfile};ext2load usb 0:1 ${fdt_addr} ${fdtimage}'
+=> setenv bootcmd 'run usbload; run usbboot'
+=> saveenv; run bootcmd;

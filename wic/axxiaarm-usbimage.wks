@@ -1,0 +1,6 @@
+# short-description: Create USB disk image with a boot partition
+# long-description: Creates a partitioned USB disk image. Boot files
+# are located in the first ext4 partition.
+
+part /boot --source bootimg-partition --ondisk sda --fstype=ext4 --label boot --active --align 512 --size 16
+part / --source rootfs --ondisk sda --fstype=ext4 --label root --align 512

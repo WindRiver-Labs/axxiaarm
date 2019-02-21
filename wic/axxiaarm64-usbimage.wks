@@ -1,0 +1,10 @@
+# short-description: Create USB disk image with a boot partition
+# long-description: Creates a partitioned USB disk image. Boot files
+# are located in the first ext2 partition.
+#
+# NOTE: When using an u-boot command "ext4load" in axm56xx board, the speed
+# of read will drop to less than 200KB/s. But the "ext2load" has no this
+# problem. So we make the first partition an ext2 one.
+
+part /boot --source bootimg-partition --ondisk sda --fstype=ext2 --label boot --active --align 4096 --size 64
+part / --source rootfs --ondisk sda --fstype=ext4 --label root --align 4096
