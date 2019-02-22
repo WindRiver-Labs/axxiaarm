@@ -20,7 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2018/06 (US107617): WRLinux 10.17 RCPL08, add AXM5516 and AXM5616 support
+  - 2019/02 (US129463): WRLinux 10.18 RCPL04, add AXM5516 and AXM5616 support
 					   Based on Linux-yocto-4.12.
 
 3. BSP Features
@@ -50,12 +50,15 @@ This BSP supports the following features.
 	+ DMA: On-Chip smart direct memory access controller
 	+ UART: On-Chip High-Speed UART
 	+ HW Monitor: ADT7467 temperature sensor, connected via I2C bus
+	+ HW Random: True Random Number Generator (TRNG)
 
 3.2 Unsupported Features
 ========================
 
 The following features are not supported and validated:
 	x PCIe: On-Chip PCIe controller
+	x SRIO: On-Chip SRIO controller
+	x SATA: On-Chip SATA controller
 	x SD/MMC: ARM AMBA Multimedia Card Interface
 
 4. Axxiaarm BSP Notes
