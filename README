@@ -351,7 +351,7 @@ Multilib is also supported by this BSP.
 
 1. To add 32-bit multilib support for an existing project, use:
 
-    bitbake lib32-wrlinux-image-glibc-std
+    bitbake lib32-wrlinux-image-std
 
 2. To add 32-bit mulilib support for a specific package, use:
 
@@ -371,7 +371,7 @@ This BSP supports USB card disk images.
 After building the project, you will have a WIC image under the directory
 tmp-glibc/deploy/images/<bsp name>/, for example:
 
-tmp-glibc/deploy/images/axxiaarm/wrlinux-image-glibc-std-axxiaarm.wic
+tmp-glibc/deploy/images/axxiaarm/wrlinux-image-std-axxiaarm.wic
 
 You can then write the output image to an USB disk.
 
@@ -380,7 +380,7 @@ You can then write the output image to an USB disk.
 
 To burn u-boot and WIC images to an USB disk, you need to execute below command:
 
-# dd if=wrlinux-image-glibc-std-axxiaarm.wic of=/dev/your_sd_dev
+# dd if=wrlinux-image-std-axxiaarm.wic of=/dev/your_sd_dev
 
 7.2 Set u-boot env
 -----------------
