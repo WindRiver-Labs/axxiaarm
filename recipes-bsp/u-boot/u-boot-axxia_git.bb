@@ -6,8 +6,8 @@ require recipes-bsp/u-boot/u-boot.inc
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;beginline=1;endline=6;md5=157ab8408beab40cd8ce1dc69f702a6c"
 
-# This revision corresponds to the tag "u-boot_v2015.10_axxia_1.57"
-SRCREV = "7125f93af0c0987228b9fb322213af04a36dda58"
+# This revision corresponds to the tag "u-boot_v2015.10_axxia_1.96"
+SRCREV = "b939d8c53af5f137ba095fe1666b1064dc948613"
 
 UBOOT_MACHINE_axxiaarm64 = "axm5600_defconfig"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
@@ -22,8 +22,10 @@ SRC_URI_append = " file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
 		 "
 DEPENDS = "atf-axxia"
 S = "${WORKDIR}/git"
+B = "${WORKDIR}/build"
+UBOOT_MAKE_TARGET ?= "all"
 
-EXTRA_OEMAKE += "AXXIA_VERSION=u-boot_v2015.10_axxia_1.57 AXXIA_ATF_VERSION=atf_84091c4_axxia_1.31"
+EXTRA_OEMAKE += "AXXIA_VERSION=u-boot_v2015.10_axxia_1.96 AXXIA_ATF_VERSION=atf_84091c4_axxia_1.43"
 PV = "2013.01.01+git${SRCREV}"
 
 # Some versions of u-boot use .bin and others use .img.  By default use .bin
@@ -41,13 +43,24 @@ SPL_BINARY = "${SPL_FILE}.${SPL_SUFFIX}"
 SPL_IMAGE = "${SPL_FILE}-${MACHINE}-${PV}-${PR}.${SPL_SUFFIX}"
 SPL_SYMLINK = "${SPL_FILE}-${MACHINE}.${SPL_SUFFIX}"
 
-do_compile_prepend() {
+do_configure() {
+	unset LDFLAGS
+	unset CFLAGS
+	unset CPPFLAGS
+
+	oe_runmake -C ${S} O=${B} ${UBOOT_MACHINE}
+}
+do_compile() {
+	unset LDFLAGS
+	unset CFLAGS
+	unset CPPFLAGS
+
 	install -d ${B}/spl
 	cp ${STAGING_DIR}/atf/bl31.o ${B}/spl/bl31.o
-}
-do_compile_append() {
+	oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_TARGET}
 	${B}/tools/mkimage -A arm64 -T firmware -C none -a 0 -e 0x00187001 -n u-boot-spl -d ${B}/spl/u-boot-spl.bin ${B}/spl/u-boot-spl.img
 }
+
 do_install () {
     install -d ${D}/boot
     install ${B}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}

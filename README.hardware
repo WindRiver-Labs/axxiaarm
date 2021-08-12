@@ -105,4 +105,5 @@ different environment it may run into unknown issues.
 	----------------------
 	Processor:		ARMv8 Processor rev 3
 	BootLoader:		U-Boot
-	BootLoader Version: u-boot_v2015.10_axxia_1.57
+	BootLoader Version: 	u-boot_v2015.10_axxia_1.96
+	ATF Version:		atf_84091c4_axxia_1.43
