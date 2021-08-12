@@ -1,0 +1,40 @@
+From 6f00a3c7c1485ccd34dee7e17d127a3b2cd9643e Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Thu, 12 Aug 2021 09:27:59 +0800
+Subject: [PATCH] config.mk: add -Wno-address-of-packed-member to CFLAGS
+
+Since gcc update to 10.2.0, a new check "address-of-packed-member" is
+instroduced to check if an address of member of a "packed" structure
+is used. Let's just silence this warning as what the commit 53dc8ae66c
+("gcc-9: silence 'address-of-packed-member' warning") has done in
+upstream u-boot.
+
+This is to fix the warning as below:
+spl.c:830:43: error: taking address of packed member of 'struct <anonymous>' may result in an unaligned pointer value [-Werror=address-of-packed-member]
+|   830 |  unsigned long *ranges = (unsigned long *)&global->memory_ranges;
+|       |                                           ^~~~~~~~~~~~~~~~~~~~~~
+
+Upstream-Status: Inappropriate [WR Linux specific change]
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ config.mk | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/config.mk b/config.mk
+index 3291aa68b9..214d151a62 100644
+--- a/config.mk
++++ b/config.mk
+@@ -241,7 +241,8 @@ CFLAGS += $(CFLAGS_SSP)
+ # Some toolchains enable security related warning flags by default,
+ # but they don't make much sense in the u-boot world, so disable them.
+ CFLAGS_WARN := $(call cc-option,-Wno-format-nonliteral) \
+-	       $(call cc-option,-Wno-format-security)
++	       $(call cc-option,-Wno-format-security) \
++	       $(call cc-option,-Wno-address-of-packed-member)
+ CFLAGS += $(CFLAGS_WARN)
+ 
+ # Report stack usage if supported
+-- 
+2.17.1
+

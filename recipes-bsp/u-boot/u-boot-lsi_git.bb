@@ -19,9 +19,12 @@ SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
 		   file://0006-lsi-axm55xx-fix-sha1-compile-error.patch \
 		   file://0007-lsi-axm55xx-fix-code-style-error.patch \
 		   file://0008-compiler-.h-sync-include-linux-compiler-.h-with-Linu.patch \
+		   file://0009-config.mk-add-Wno-address-of-packed-member-to-CFLAGS.patch \
 		 "
 
 S = "${WORKDIR}/git"
+B = "${WORKDIR}/build"
+UBOOT_MAKE_TARGET ?= "all"
 
 EXTRA_OEMAKE += "AXXIA_VERSION=lsi_axxia_u-boot_5.8.1.88"
 PV = "2013.01.01+git${SRCREV}"
@@ -40,6 +43,22 @@ SPL_PATH = "spl"
 SPL_BINARY = "${SPL_FILE}.${SPL_SUFFIX}"
 SPL_IMAGE = "${SPL_FILE}-${MACHINE}-${PV}-${PR}.${SPL_SUFFIX}"
 SPL_SYMLINK = "${SPL_FILE}-${MACHINE}.${SPL_SUFFIX}"
+
+do_configure() {
+	unset LDFLAGS
+	unset CFLAGS
+	unset CPPFLAGS
+
+	oe_runmake -C ${S} O=${B} ${UBOOT_MACHINE}
+}
+
+do_compile() {
+	unset LDFLAGS
+	unset CFLAGS
+	unset CPPFLAGS
+
+	oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_TARGET}
+}
 
 do_install () {
     install -d ${D}/boot
