@@ -20,7 +20,7 @@ SRC_URI_append = " file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
 			   file://0001-ARMv8-add-GOT-sections-to-the-list-of-sections-copie.patch \
 			   file://0001-axm5600-correct-MKIMAGEFLAGS-of-u-boot.img-and-u-boo.patch \
 		 "
-DEPENDS = "atf-axxia"
+DEPENDS_append = " atf-axxia"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 UBOOT_MAKE_TARGET ?= "all"
@@ -56,7 +56,7 @@ do_compile() {
 	unset CPPFLAGS
 
 	install -d ${B}/spl
-	cp ${STAGING_DIR}/atf/bl31.o ${B}/spl/bl31.o
+	cp ${STAGING_LIBDIR}/bl31.o ${B}/spl/bl31.o
 	oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_TARGET}
 	${B}/tools/mkimage -A arm64 -T firmware -C none -a 0 -e 0x00187001 -n u-boot-spl -d ${B}/spl/u-boot-spl.bin ${B}/spl/u-boot-spl.img
 }
