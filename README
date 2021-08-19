@@ -407,3 +407,18 @@ The axm56xx board can boot by setting the following uboot environment variables:
 => setenv usbload 'usb start;ext2load usb 0:1 ${loadaddr} ${bootfile};ext2load usb 0:1 ${fdt_addr} ${fdtimage}'
 => setenv bootcmd 'run usbload; run usbboot'
 => saveenv; run bootcmd;
+
+
+8. Setup nemac parameters
+=========================
+
+When the nemac driver for axm56xx is under high stress, the warning message
+can be observed:
+
+	"net eth0: No TX descriptors!"
+
+This is because the initial number for TX descriptors is 128 and this value is
+inadequate for heavy network load. Add the following string to the commandline
+to increase the descriptor number:
+
+	"nemac.rx_num_desc=512 nemac.tx_num_desc=512"
