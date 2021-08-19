@@ -34,7 +34,7 @@ To build an axxiaarm64 BSP, use:
 
 License
 -------
-Copyright (C) 2017 Wind River Systems, Inc.
+Copyright (C) 2017 - 2021 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -85,7 +85,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd build/tmp-glibc/work-shared/axxiaarm/kernel-source
-	# git whatchanged standard/base..
+  # git whatchanged <kernel_version>/standard/base..
 
 4. Boot Instructions
 ====================
@@ -107,9 +107,9 @@ The u-boot-spl.bin and u-boot.img are built from the git source code. They
 are in the build/tmp-glibc/deploy/images/axxiaarm direcotry.The images can also
 be got from layers/axxiaarm/bootloader/axm55xx.
 
- u-boot-spl.bin		--- The 2nd stage boot loader.
- u-boot.img			--- The 3rd stage boot loader.
- AXM55xx_1p0.bin	--- The parameter table file for boot loader.
+ u-boot-spl.bin     --- The 2nd stage boot loader.
+ u-boot.img         --- The 3rd stage boot loader.
+ AXM55xx_1p0.bin    --- The parameter table file for boot loader.
 
 4.1.2 Updating the 2nd stage boot loader:
 --------------------------------------
@@ -161,9 +161,9 @@ The u-boot-spl.img and u-boot.img are built from the git source code. They
 are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.The images can also
 be got from layers/axxiaarm/bootloader/axm56xx.
 
- u-boot-spl.img		--- The 2nd stage boot loader.
- u-boot.img			--- The 3rd stage boot loader.
- AXM5600.bin		--- The parameter table file for boot loader.
+ u-boot-spl.img     --- The 2nd stage boot loader.
+ u-boot.img         --- The 3rd stage boot loader.
+ AXM5600.bin        --- The parameter table file for boot loader.
 
 4.2.2 Updating the 2nd stage boot loader:
 --------------------------------------
@@ -213,7 +213,7 @@ network values, and as below is an example for axm56xx:
  u-boot=> setenv rootpath <nfs root>
  u-boot=> tftp 0x4000000 uImage
  u-boot=> tftp 0x24800000 axm5616-victoria.dtb
- u-boot=> setenv bootargs console=ttyAMA0 root=/dev/nfs rw \
+ u-boot=> setenv bootargs console=ttyAMA0,9600n8 root=/dev/nfs rw \
           nfsroot=$(serverip):$(rootpath) \
           ip=$(ipaddr)::$(gatewayip):$(netmask)::eth0:off
  u-boot=> bootm 0x4000000 - 0x24800000
@@ -233,7 +233,7 @@ And as below is an example for axm55xx:
  u-boot=> setenv rootpath <nfs root>
  u-boot=> tftp 0x4000000 uImage
  u-boot=> tftp 0x4500000 axm5516-amarillo.dtb
- u-boot=> setenv bootargs console=ttyAMA0,115200 root=/dev/nfs rw \
+ u-boot=> setenv bootargs console=ttyAMA0,9600n8 root=/dev/nfs rw \
           nfsroot=$(serverip):$(rootpath) \
           ip=$(ipaddr)::$(gatewayip):$(netmask)::eth0:off
  u-boot=> bootm 0x4000000 - 0x4500000
@@ -241,14 +241,7 @@ And as below is an example for axm55xx:
 5. Axxiaarm board Features
 ==========================
 
-5.1 OProfile
-------------
-
-This BSP does not have an available hardware performance counter,
-so OProfile must resort to the timer mode. If you are using OProfile
-you need to add "oprofile.timer=1" to the kernel boot options.
-
-5.2 kexec/kdump
+5.1 kexec/kdump
 ---------------
 
 For discussion purposes, some useful terminology will be described here.
@@ -262,12 +255,12 @@ command for your project:
 
      --template=feature/kexec,feature/kdump
 
-5.2.1 kexec
+5.1.1 kexec
 -----------
 For capture kernel:
 Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
 
-5.2.2 kdump
+5.1.2 kdump
 -----------
 For boot kernel:
 Now kdump in axm55xx can only support memory size less than 4G because that
@@ -277,32 +270,10 @@ than 4G. So need pass "crashkernel=256M@256M mem=4096M" via the command line.
 For capture kernel:
 Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
 
-5.3 Ramdisk
------------
-
-Before using ramdisk, please set initrd_high to 0xffffffff to implies that the
-initrd are initially copied to working addresses. This will avoid an additional
-copy. otherwise initrd will be relocated to random address.
-
-	In the u-boot terminal:
-	$ setenv initrd_high 0xffffffff
-
-And the ramdisk must be download to the lowmem region.
-
-Note:
-lowmem: linux memory that is always mapped into the kernel's address space.
-
 6. Axxiaarm64 board Features
 ============================
 
-6.1 OProfile
-------------
-
-This BSP does not have an available hardware performance counter,
-so OProfile must resort to the timer mode. If you are using OProfile
-you need to add "oprofile.timer=1" to the kernel boot options.
-
-6.2 kexec/kdump
+6.1 kexec/kdump
 ---------------
 
 To build the boot or capture kernel, use the following option with the configure
@@ -310,12 +281,12 @@ command for your project:
 
      --template=feature/kexec,feature/kdump
 
-6.2.1 kexec
+6.1.1 kexec
 -----------
 For capture kernel:
 Before boot capture kernel, please add "maxcpus=1" to the boot parameter.
 
-6.2.2 kdump
+6.1.2 kdump
 -----------
 For boot kernel:
 To reserve a memory region for the capture kernel, pass "crashkernel=256M@0"
@@ -325,21 +296,6 @@ For capture kernel:
 Please use "Image" as boot capture kernel which can be found in the path
 build/tmp-glibc/deploy/images/axxiaarm64. Before boot capture kernel, please add
 "maxcpus=1" to the boot parameter.
-
-6.3 Ramdisk
------------
-
-Before using ramdisk, please set initrd_high to 0xffffffff to implies that the
-initrd are initially copied to working addresses. This will avoid an additional
-copy. otherwise initrd will be relocated to random address.
-
-	In the u-boot terminal:
-	$ setenv initrd_high 0xffffffff
-
-And the ramdisk must be download to the lowmem region.
-
-Note:
-lowmem: linux memory that is always mapped into the kernel's address space.
 
 6.4 Multilib
 -----------
@@ -353,7 +309,7 @@ Multilib is also supported by this BSP.
 
     bitbake lib32-wrlinux-image-std
 
-2. To add 32-bit mulilib support for a specific package, use:
+2. To add 32-bit multilib support for a specific package, use:
 
     bitbake lib32-<pkg-name>
 
@@ -391,7 +347,7 @@ The axm55xx board can boot by setting the following uboot environment variables:
 => setenv fdtimage axm5516-amarillo.dtb
 => setenv fdt_addr 0x5000000
 => setenv loadaddr 0x4000000
-=> setenv usbboot 'setenv bootargs console=ttyAMA0,9600 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
+=> setenv usbboot 'setenv bootargs console=ttyAMA0,9600n8 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
 => setenv usbload 'usb start;ext4load usb 0:1 ${loadaddr} ${bootfile};ext4load usb 0:1 ${fdt_addr} ${fdtimage}'
 => setenv bootcmd 'run usbload; run usbboot'
 => saveenv; run bootcmd;
@@ -403,7 +359,7 @@ The axm56xx board can boot by setting the following uboot environment variables:
 => setenv fdtimage axm5616-victoria.dtb
 => setenv fdt_addr 0xa4800000
 => setenv loadaddr 0x4000000
-=> setenv usbboot 'setenv bootargs console=ttyAMA0 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
+=> setenv usbboot 'setenv bootargs console=ttyAMA0,9600n8 root=/dev/sda2 rw rootfstype=ext4 rootwait ;bootm ${loadaddr} - ${fdt_addr}'
 => setenv usbload 'usb start;ext2load usb 0:1 ${loadaddr} ${bootfile};ext2load usb 0:1 ${fdt_addr} ${fdtimage}'
 => setenv bootcmd 'run usbload; run usbboot'
 => saveenv; run bootcmd;
