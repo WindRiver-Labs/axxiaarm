@@ -20,6 +20,7 @@ SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
 		   file://0007-lsi-axm55xx-fix-code-style-error.patch \
 		   file://0008-compiler-.h-sync-include-linux-compiler-.h-with-Linu.patch \
 		   file://0009-config.mk-add-Wno-address-of-packed-member-to-CFLAGS.patch \
+		   file://0010-u-boot-lsi-axxia-introduce-solution-for-CVE-2017-571.patch \
 		 "
 
 S = "${WORKDIR}/git"
