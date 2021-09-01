@@ -155,7 +155,27 @@ while the 3rd stage runs from system memory. System memory gets initialized
 in  the 2nd stage, and the 3rd stage gets loaded at the base of system
 memory.
 
-4.2.1 u-boot images:
+4.2.1 Building u-boot images:
+----------------------------
+Due to the software license terms, you must follow the steps as below to build
+the images u-boot.img and u-boot-spl.img:
+
+  1) set BB_NO_NETWORK as '0' in <path-of-project>/build/conf/local.conf file.
+
+  2) Launch bitbake to build an image:
+
+     $ cd path_to_your_project
+     $ . ./environment-setup-x86_64-wrlinuxsdk-linux
+     $ . ./oe-init-build-env
+     $ cat << _EOF >> conf/local.conf
+MACHINE_FEATURES += " bootloader-axxia"
+PNWHITELIST_wr-axxiaarm += 'u-boot-axxia'
+_EOF
+
+  3) The u-boot.img and u-boot-spl.img can be found in the path:
+  build/tmp-glibc/deploy/images/axxiaarm64/
+
+4.2.2 u-boot images:
 -------------------
 The u-boot-spl.img and u-boot.img are built from the git source code. They
 are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.The images can also
@@ -165,7 +185,7 @@ be got from layers/axxiaarm/bootloader/axm56xx.
  u-boot.img         --- The 3rd stage boot loader.
  AXM5600.bin        --- The parameter table file for boot loader.
 
-4.2.2 Updating the 2nd stage boot loader:
+4.2.3 Updating the 2nd stage boot loader:
 --------------------------------------
 
 The old u-boot using ssp command to write spi flash, In the latest
@@ -179,7 +199,7 @@ or
 	# sf erase 0 0x40000
 	# sf write 0x4000000 0 0x40000
 
-4.2.3 Updating the 3rd stage boot loader:
+4.2.4 Updating the 3rd stage boot loader:
 --------------------------------------
 	# tftp 0x4000000 u-boot.img
 
@@ -189,7 +209,7 @@ or
 	# sf write 0x4000000 0x100000 0x200000
 
 
-4.2.4 Updating the parameter:
+4.2.5 Updating the parameter:
 --------------------------
 	# tftp 0x4000000 AXM5600.bin
 
