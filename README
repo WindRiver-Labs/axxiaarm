@@ -104,8 +104,7 @@ memory.
 4.1.1 u-boot images:
 --------------------
 The u-boot-spl.bin and u-boot.img are built from the git source code. They
-are in the build/tmp-glibc/deploy/images/axxiaarm direcotry.The images can also
-be got from layers/axxiaarm/bootloader/axm55xx.
+are in the build/tmp-glibc/deploy/images/axxiaarm direcotry.
 
  u-boot-spl.bin     --- The 2nd stage boot loader.
  u-boot.img         --- The 3rd stage boot loader.
@@ -178,8 +177,7 @@ _EOF
 4.2.2 u-boot images:
 -------------------
 The u-boot-spl.img and u-boot.img are built from the git source code. They
-are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.The images can also
-be got from layers/axxiaarm/bootloader/axm56xx.
+are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.
 
  u-boot-spl.img     --- The 2nd stage boot loader.
  u-boot.img         --- The 3rd stage boot loader.
