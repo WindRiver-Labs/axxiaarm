@@ -6,28 +6,26 @@ require recipes-bsp/u-boot/u-boot.inc
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb"
 
-# This revision corresponds to the tag "lsi_axxia_u-boot_5.8.1.88"
-SRCREV = "074d50cff3abc9fd04a87b74edf228d15a216bd8"
+# This revision corresponds to the tag "lsi_axxia_u-boot_5.8.1.90"
+SRCREV = "fca362a4628b8383f83660b7b7651f3d405161af"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 COMPATIBLE_MACHINE = "^axxiaarm$"
-SRC_URI = "git://github.com/lsigithub/lsi_axxia_uboot_public.git;nobranch=1"
+SRC_URI = "git://github.com/axxia/axxia_u-boot.git;branch=lsi-v2013.01.01"
+
 SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
-		   file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
 		   file://0001-axxia-fix-compile-error.patch \
-		   file://0006-lsi-axm55xx-fix-sha1-compile-error.patch \
-		   file://0007-lsi-axm55xx-fix-code-style-error.patch \
 		   file://0008-compiler-.h-sync-include-linux-compiler-.h-with-Linu.patch \
 		   file://0009-config.mk-add-Wno-address-of-packed-member-to-CFLAGS.patch \
-		   file://0010-u-boot-lsi-axxia-introduce-solution-for-CVE-2017-571.patch \
+		   file://0011-axxia-lowlevel-ensure-CVE-2017-5715-cover-all-cores.patch \
 		 "
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 UBOOT_MAKE_TARGET ?= "all"
 
-EXTRA_OEMAKE += "AXXIA_VERSION=lsi_axxia_u-boot_5.8.1.88"
+EXTRA_OEMAKE += "AXXIA_VERSION=lsi_axxia_u-boot_5.8.1.90"
 PV = "2013.01.01+git${SRCREV}"
 
 # Some versions of u-boot use .bin and others use .img.  By default use .bin
