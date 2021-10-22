@@ -1,0 +1,69 @@
+From 0014a971521cb46688ffb4abd42604e3415257f3 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Fri, 22 Oct 2021 16:23:48 +0800
+Subject: [PATCH] add fat support for axxiaarm64
+
+Add Kconfig symbols for various configurations
+supported by FAT filesystem support code.
+
+Enable CMD_FAT and FAT_WRITE for axm5600 (axxiaarm64)
+Enable shell for axm5600 (axxiaarm64)
+
+Refer [eedfb89e61 fs: fat: add kbuild configuration support]
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ configs/axm5600_defconfig |  3 +++
+ fs/fat/Kconfig            | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/configs/axm5600_defconfig b/configs/axm5600_defconfig
+index 4991836a54..4f8d84c03f 100644
+--- a/configs/axm5600_defconfig
++++ b/configs/axm5600_defconfig
+@@ -3,3 +3,6 @@ CONFIG_TARGET_AXXIA=y
+ CONFIG_NET_ONCE=y
+ CONFIG_AXXIA_GPIO=y
+ CONFIG_AXXIA_SPI=y
++CONFIG_FAT_WRITE=y
++CONFIG_CMD_FAT=y
++CONFIG_HUSH_PARSER=y
+diff --git a/fs/fat/Kconfig b/fs/fat/Kconfig
+index e69de29bb2..194cfd8249 100644
+--- a/fs/fat/Kconfig
++++ b/fs/fat/Kconfig
+@@ -0,0 +1,30 @@
++config FS_FAT
++    bool "Enable FAT filesystem support"
++    help
++      This provides support for reading images from File Allocation Table
++      (FAT) filesystem. FAT filesystem is a legacy, lightweight filesystem.
++      It is useful mainly for its wide compatibility with various operating
++      systems. You can also enable CMD_FAT to get access to fat commands.
++
++config FAT_WRITE
++    bool "Enable FAT filesystem write support"
++    depends on FS_FAT
++    help
++      This provides support for creating and writing new files to an
++      existing FAT filesystem partition.
++
++config FS_FAT_MAX_CLUSTSIZE
++    int "Set maximum possible clustersize"
++    default 65536
++    depends on FS_FAT
++    help
++      Set the maximum possible clustersize for the FAT filesytem. This
++      is the smallest amount of disk space that can be used to hold a
++      file. Unless you have an extremely tight memory memory constraints,
++      leave the default.
++
++config CMD_FAT
++    bool "FAT command support"
++    select FS_FAT
++    help
++        Support for the FAT fs
+-- 
+2.27.0
+
