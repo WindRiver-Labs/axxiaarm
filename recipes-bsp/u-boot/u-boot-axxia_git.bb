@@ -20,6 +20,7 @@ SRC_URI_append = " file://0005-lsi-Add-the-Ability-to-Build-with-GCC6.patch \
 			   file://0001-ARMv8-add-GOT-sections-to-the-list-of-sections-copie.patch \
 			   file://0001-axm5600-correct-MKIMAGEFLAGS-of-u-boot.img-and-u-boo.patch \
 			   file://0001-add-fat-support-for-axxiaarm64.patch \
+			   file://0001-fs-ext4-cache-extent-data.patch \
 		 "
 DEPENDS_append = " atf-axxia"
 S = "${WORKDIR}/git"
