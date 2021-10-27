@@ -1,0 +1,168 @@
+From f2e8b14808482040ce243d2d12f87ec6a67848fd Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 11:47:30 +0800
+Subject: [PATCH] cmd_test: implement -e test for file existence
+
+This is much like a regular shell's -e operator, except that it takes
+multiple arguments to specify the device type and  device/partition ID
+in addition to the usual filename:
+
+    if test -e usb 0:1 /boot/boot.scr; then echo yes; else echo no; fi
+
+Refer commit [e5e897c01b cmd_test: implement -e test for file
+existence] [1] to implement fat and ext4 filesystem
+
+[1] https://github.com/u-boot/u-boot/commit/e5e897c01b1cd496187ca56a38ff5559d27f951c
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ common/cmd_test.c |  7 +++++++
+ fs/ext4/ext4fs.c  |  8 ++++++++
+ fs/fat/fat.c      |  7 +++++++
+ fs/fs.c           | 19 +++++++++++++++++++
+ include/ext4fs.h  |  1 +
+ include/fat.h     |  1 +
+ include/fs.h      |  2 ++
+ 7 files changed, 45 insertions(+)
+
+diff --git a/common/cmd_test.c b/common/cmd_test.c
+index d4ec18672e..15ca79e4a2 100644
+--- a/common/cmd_test.c
++++ b/common/cmd_test.c
+@@ -23,6 +23,7 @@
+ 
+ #include <common.h>
+ #include <command.h>
++#include <fs.h>
+ 
+ static int do_test(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+ {
+@@ -60,6 +61,8 @@ static int do_test(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+ 			adv = 1;
+ 		else if (strcmp(ap[0], "-z") == 0 || strcmp(ap[0], "-n") == 0)
+ 			adv = 2;
++		else if (strcmp(ap[0], "-e") == 0)
++			adv = 4;
+ 		else
+ 			adv = 3;
+ 
+@@ -130,6 +133,10 @@ static int do_test(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+ 				expr = last_expr && expr;
+ 			last_cmp = -1;
+ 		}
++		if (adv == 4) {
++			expr = file_exists(ap[1], ap[2], ap[3], FS_TYPE_ANY);
++			break;
++		}
+ 
+ 		ap += adv; left -= adv;
+ 	}
+diff --git a/fs/ext4/ext4fs.c b/fs/ext4/ext4fs.c
+index f02c215ccc..87eee4d699 100644
+--- a/fs/ext4/ext4fs.c
++++ b/fs/ext4/ext4fs.c
+@@ -168,6 +168,14 @@ int ext4fs_read_file(struct ext2fs_node *node, int pos,
+ 	return len;
+ }
+ 
++int ext4fs_exists(const char *filename)
++{
++	int ret;
++
++	ret = ext4fs_open(filename);
++	return ret != -1;
++}
++
+ int ext4fs_ls(const char *dirname)
+ {
+ 	struct ext2fs_node *dirnode;
+diff --git a/fs/fat/fat.c b/fs/fat/fat.c
+index 25d3318cd0..a73ba15d8b 100644
+--- a/fs/fat/fat.c
++++ b/fs/fat/fat.c
+@@ -1240,6 +1240,13 @@ int file_fat_detectfs(void)
+ 	return 0;
+ }
+ 
++int fat_exists(const char *filename)
++{
++	int ret;
++	ret = do_fat_read_at(filename, 0, NULL, 0, LS_NO);
++	return ret != -1;
++}
++
+ int file_fat_ls(const char *dir)
+ {
+ 	return do_fat_read(dir, NULL, 0, LS_YES);
+diff --git a/fs/fs.c b/fs/fs.c
+index 023e7ef16a..880521ecdf 100644
+--- a/fs/fs.c
++++ b/fs/fs.c
+@@ -314,6 +314,25 @@ int do_load(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
+ 	return 0;
+ }
+ 
++static inline int fs_exists_unsupported(const char *filename)
++{
++	return 0;
++}
++
++int file_exists(const char *dev_type, const char *dev_part, const char *file,
++        int fstype)
++{
++	if (fs_set_blk_dev(dev_type, dev_part, fstype))
++		return 0;
++
++	if (fs_type == FS_TYPE_EXT)
++		return ext4fs_exists(file);
++	else if (fs_type == FS_TYPE_FAT)
++		return fat_exists(file);
++
++	return fs_exists_unsupported(file);
++}
++
+ int do_ls(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
+ 	int fstype)
+ {
+diff --git a/include/ext4fs.h b/include/ext4fs.h
+index 3b59d15aab..c948732419 100644
+--- a/include/ext4fs.h
++++ b/include/ext4fs.h
+@@ -133,6 +133,7 @@ int ext4fs_open(const char *filename);
+ int ext4fs_read(char *buf, unsigned len);
+ int ext4fs_mount(unsigned part_length);
+ void ext4fs_close(void);
++int ext4fs_exists(const char *filename);
+ int ext4fs_ls(const char *dirname);
+ void ext4fs_free_node(struct ext2fs_node *node, struct ext2fs_node *currroot);
+ int ext4fs_devread(int sector, int byte_offset, int byte_len, char *buf);
+diff --git a/include/fat.h b/include/fat.h
+index 706cd7a4bd..51bb4b7144 100644
+--- a/include/fat.h
++++ b/include/fat.h
+@@ -207,6 +207,7 @@ file_read_func		file_fat_read;
+ /* Currently this doesn't check if the dir exists or is valid... */
+ int file_cd(const char *path);
+ int file_fat_detectfs(void);
++int fat_exists(const char *filename);
+ int file_fat_ls(const char *dir);
+ long file_fat_read_at(const char *filename, unsigned long pos, void *buffer,
+ 		      unsigned long maxsize);
+diff --git a/include/fs.h b/include/fs.h
+index 4f30a385a0..b7e6b8200b 100644
+--- a/include/fs.h
++++ b/include/fs.h
+@@ -59,6 +59,8 @@ int fs_read(const char *filename, ulong addr, int offset, int len);
+  */
+ int do_load(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
+ 		int fstype, int cmdline_base);
++int file_exists(const char *dev_type, const char *dev_part, const char *file,
++		int fstype);
+ int do_ls(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
+ 		int fstype);
+ 
+-- 
+2.27.0
+
