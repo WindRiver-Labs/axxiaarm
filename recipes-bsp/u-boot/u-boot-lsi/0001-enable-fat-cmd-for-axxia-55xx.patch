@@ -1,0 +1,29 @@
+From c91afb167b89e2479110f9d05a5647c99bf0ba07 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 17:53:49 +0800
+Subject: [PATCH] enable fat cmd for axxia-55xx
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ include/configs/axxia-55xx.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/configs/axxia-55xx.h b/include/configs/axxia-55xx.h
+index 8bf3af30b2..d587c0a4ab 100644
+--- a/include/configs/axxia-55xx.h
++++ b/include/configs/axxia-55xx.h
+@@ -148,6 +148,9 @@
+ 
+ #define CONFIG_BOOTDELAY 3
+ 
++#define CONFIG_FAT
++#define CONFIG_CMD_FAT
++
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"loadaddr=0x82000000\0" \
+ 	"console=ttyO2,115200n8\0" \
+-- 
+2.27.0
+
