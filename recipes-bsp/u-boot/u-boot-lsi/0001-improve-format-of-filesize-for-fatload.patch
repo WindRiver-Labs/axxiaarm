@@ -1,0 +1,51 @@
+From 128d8d4cc0693c46ea05787e6ce93b301891ceea Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 16:58:11 +0800
+Subject: [PATCH] improve format of filesize for fatload
+
+Refer commit [49c4f0370b fs: Use new numeric setenv functions][1],
+imporve format of filesize for fatload
+
+Without this patch:
+...
+=> fatload usb 0:1 0x40000  no_ab
+reading no_ab
+1 bytes read in 37 ms (0 Bytes/s)
+=> echo $filesize
+0x1
+...
+
+Aplly this patch:
+...
+=> fatload usb 0:1 0x40000  no_ab
+reading no_ab
+1 bytes read in 37 ms (0 Bytes/s)
+=> echo $filesize
+1
+...
+
+[1] https://github.com/u-boot/u-boot/commit/49c4f0370ba917a2608e933ca541898e9c098397
+
+Upstream-Status: Inappropriate [wr-installer specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ fs/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/fs.c b/fs/fs.c
+index 880521ecdf..acfb65c5cb 100644
+--- a/fs/fs.c
++++ b/fs/fs.c
+@@ -308,7 +308,7 @@ int do_load(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
+ 	}
+ 	puts("\n");
+ 
+-	sprintf(buf, "0x%x", len_read);
++	sprintf(buf, "%x", len_read);
+ 	setenv("filesize", buf);
+ 
+ 	return 0;
+-- 
+2.27.0
+
