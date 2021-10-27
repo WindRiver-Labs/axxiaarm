@@ -23,6 +23,7 @@ SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
 		   file://0001-cmd_test-implement-e-test-for-file-existence.patch \
 		   file://0001-enable-fat-cmd-for-axxia-55xx.patch \
 		   file://0001-Increate-CONFIG_SYS_MAXARGS-to-workaround-setenv-iss.patch \
+		   file://0001-enable-shell-for-axxia-55xx.patch \
 		 "
 
 S = "${WORKDIR}/git"

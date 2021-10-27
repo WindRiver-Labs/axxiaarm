@@ -1,0 +1,28 @@
+From 3f0d6c3c9dfba6d9eb0980861eabbdb997376542 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 18:16:44 +0800
+Subject: [PATCH] enable shell for axxia-55xx
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ include/configs/axxia-55xx.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/configs/axxia-55xx.h b/include/configs/axxia-55xx.h
+index d587c0a4ab..1dfda4051a 100644
+--- a/include/configs/axxia-55xx.h
++++ b/include/configs/axxia-55xx.h
+@@ -151,6 +151,8 @@
+ #define CONFIG_FAT
+ #define CONFIG_CMD_FAT
+ 
++#define CONFIG_SYS_HUSH_PARSER
++
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"loadaddr=0x82000000\0" \
+ 	"console=ttyO2,115200n8\0" \
+-- 
+2.27.0
+
