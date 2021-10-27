@@ -1,0 +1,51 @@
+From 445634c420ced3a6edaca834edd9f7a84d06fcae Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 18:35:48 +0800
+Subject: [PATCH] fix usb write failed
+
+While usb start; usb reset; usb write failed
+
+Without this patch:
+...
+=> usb write 0x4000000 0x400 0x1
+USB write: device 0 block # 1024, count 1 ...
+EHCI timed out on TD - token=0x2008c80
+EHCI timed out on TD - token=0x128d80
+EHCI timed out on TD - token=0x82008c80
+EHCI timed out on TD - token=0x2008c80
+EHCI timed out on TD - token=0x128d80
+0 blocks write: ERROR
+...
+
+Apply this patch:
+...
+=> usb write 0x4000000 0x400 0x1
+USB write: device 0 block # 1024, count 1 ... 1 blocks write: OK
+...
+
+The CONFIG_USB_EHCI_TXFIFO_THRESH enables setting of the
+txfilltuning field in the EHCI controller on reset
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ include/configs/axxia-55xx.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/configs/axxia-55xx.h b/include/configs/axxia-55xx.h
+index 1dfda4051a..92d6680d98 100644
+--- a/include/configs/axxia-55xx.h
++++ b/include/configs/axxia-55xx.h
+@@ -153,6 +153,8 @@
+ 
+ #define CONFIG_SYS_HUSH_PARSER
+ 
++#define CONFIG_USB_EHCI_TXFIFO_THRESH 0x10
++
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"loadaddr=0x82000000\0" \
+ 	"console=ttyO2,115200n8\0" \
+-- 
+2.27.0
+
