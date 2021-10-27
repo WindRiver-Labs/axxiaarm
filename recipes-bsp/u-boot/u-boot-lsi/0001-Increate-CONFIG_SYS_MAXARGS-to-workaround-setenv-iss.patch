@@ -1,0 +1,35 @@
+From b8231c3ed9414958c7e504ffcad01913cf6400fd Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Oct 2021 11:17:08 +0800
+Subject: [PATCH 4/4] Increate CONFIG_SYS_MAXARGS to workaround setenv issue
+
+If the value has multple (>16) spaces, it caused setenv failed
+
+=> setenv a "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"
+** Too many args (max. 16) **
+
+Append CONFIG_SYS_MAXARGS to 160 to workaround
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ include/configs/axxia-arm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/axxia-arm.h b/include/configs/axxia-arm.h
+index 31dc05f3b9..966116e822 100755
+--- a/include/configs/axxia-arm.h
++++ b/include/configs/axxia-arm.h
+@@ -725,7 +725,7 @@ int serial_early_init(void);
+ /* Print Buffer Size */
+ #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
+ 					sizeof(CONFIG_SYS_PROMPT) + 16)
+-#define CONFIG_SYS_MAXARGS		16
++#define CONFIG_SYS_MAXARGS		160
+ /* Boot Argument Buffer Size */
+ #define CONFIG_SYS_BARGSIZE		(CONFIG_SYS_CBSIZE)
+ 
+-- 
+2.27.0
+
