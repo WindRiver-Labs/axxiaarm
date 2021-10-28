@@ -1,0 +1,44 @@
+From d0e016cdee0bb352d76ca0b729afeb41d18e8d6f Mon Sep 17 00:00:00 2001
+From: Ionut Nicu <ioan.nicu.ext@nsn.com>
+Date: Mon, 13 Jan 2014 11:59:24 +0100
+Subject: [PATCH] ext4fs: use EXT2_BLOCK_SIZE instead of fs->blksz
+
+Using fs->blksz in ext4fs_get_extent_block() is not
+correct since fs->blksz is not initialized on the
+read path. Use EXT2_BLOCK_SIZE() instead which will
+produce the desired output.
+
+Signed-off-by: Ionut Nicu <ioan.nicu.ext@nsn.com>
+Signed-off-by: Mathias Rulf <mathias.rulf@nsn.com>
+
+Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/470173274d9ceb18a7140ef93e20be6c2236e7d9]
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ fs/ext4/ext4_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ext4/ext4_common.c b/fs/ext4/ext4_common.c
+index 4acb2e9395..4c5e37edb4 100644
+--- a/fs/ext4/ext4_common.c
++++ b/fs/ext4/ext4_common.c
+@@ -1423,7 +1423,7 @@ static struct ext4_extent_header *ext4fs_get_extent_block
+ {
+ 	struct ext4_extent_idx *index;
+ 	unsigned long long block;
+-	struct ext_filesystem *fs = get_fs();
++	int blksz = EXT2_BLOCK_SIZE(data);
+ 	int i;
+ 
+ 	while (1) {
+@@ -1447,7 +1447,7 @@ static struct ext4_extent_header *ext4fs_get_extent_block
+ 		block = le32_to_cpu(index[i].ei_leaf_hi);
+ 		block = (block << 32) + le32_to_cpu(index[i].ei_leaf_lo);
+ 
+-		if (ext4fs_devread(block << log2_blksz, 0, fs->blksz, buf))
++		if (ext4fs_devread(block << log2_blksz, 0, blksz, buf))
+ 			ext_block = (struct ext4_extent_header *)buf;
+ 		else
+ 			return 0;
+-- 
+2.27.0
+

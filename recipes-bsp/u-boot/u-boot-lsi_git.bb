@@ -26,6 +26,8 @@ SRC_URI_append = " file://0001-lsi-axm55xx-fix-the-u-boot-compile-fail.patch \
 		   file://0001-enable-shell-for-axxia-55xx.patch \
 		   file://0001-fix-usb-write-failed.patch \
 		   file://0001-fix-USB2.0-device-timeout-issue.patch \
+		   file://0001-ext4fs-use-EXT2_BLOCK_SIZE-instead-of-fs-blksz.patch \
+		   file://0001-ext4fs-fix-invalid-extent-block-error.patch \
 		 "
 
 S = "${WORKDIR}/git"
