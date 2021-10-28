@@ -1,0 +1,42 @@
+From 6bf6ddad7cb5c81ab9e9fe96bd839eb3230da43c Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 28 Oct 2021 17:32:36 +0800
+Subject: [PATCH] fix USB2.0 device timeout issue
+
+$ fatload usb 0:1 0x8000000 initramfs
+reading initramfs
+EHCI timed out on TD - token=0xac008d80
+EHCI timed out on TD - token=0x2c008d80
+EHCI timed out on TD - token=0x2c008d80
+Error reading cluster
+** Unable to read file initramfs **
+
+Refer ttps://u-boot.denx.narkive.com/RYv74ss1/usb2-0-device-timeout-issue
+to resolve it
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ common/usb_storage.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/common/usb_storage.c b/common/usb_storage.c
+index d5c9b269ae..3c216f3cb2 100644
+--- a/common/usb_storage.c
++++ b/common/usb_storage.c
+@@ -160,9 +160,9 @@ struct us_data {
+ /*
+  * The U-Boot EHCI driver can handle any transfer length as long as there is
+  * enough free heap space left, but the SCSI READ(10) and WRITE(10) commands are
+- * limited to 65535 blocks.
++ * limited to 8000 blocks.
+  */
+-#define USB_MAX_XFER_BLK	65535
++#define USB_MAX_XFER_BLK	8000
+ #else
+ #define USB_MAX_XFER_BLK	20
+ #endif
+-- 
+2.27.0
+
