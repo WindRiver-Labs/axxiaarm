@@ -134,13 +134,8 @@ are in the build/tmp-glibc/deploy/images/axxiaarm direcotry.
 4.1.3 Updating the 2nd stage boot loader:
 --------------------------------------
 
-The old u-boot using ssp command to write spi flash, In the latest
-u-boot, ssp command is replace by sf.
-
 	# tftp 0x4000000 u-boot-spl.bin
 
-	# ssp w 0 0x4000000 0x0 0x40000
-or
 	# sf probe 0
 	# sf erase 0 0x40000
 	# sf write 0x4000000 0 0x40000
@@ -149,8 +144,6 @@ or
 --------------------------------------
 	# tftp 0x4000000 u-boot.img
 
-	# ssp w 0 0x4000000 0x100000 0x200000
-or
 	# sf erase 0x100000 0x200000
 	# sf write 0x4000000 0x100000 0x200000
 
@@ -159,8 +152,6 @@ or
 --------------------------
 	# tftp 0x4000000 AXM55xx_1p0.bin
 
-	# ssp w 0 0x4000000 0x40000 0x10000
-or
 	# sf erase 0x40000 0x10000
 	# sf write 0x4000000 0x40000 0x10000
 
@@ -207,13 +198,8 @@ are in the build/tmp-glibc/deploy/images/axxiaarm64 direcotry.
 4.2.3 Updating the 2nd stage boot loader:
 --------------------------------------
 
-The old u-boot using ssp command to write spi flash, In the latest
-u-boot, ssp command is replace by sf.
-
 	# tftp 0x4000000 u-boot-spl.img
 
-	# ssp w 0 0x4000000 0x0 0x40000
-or
 	# sf probe 0
 	# sf erase 0 0x40000
 	# sf write 0x4000000 0 0x40000
@@ -222,8 +208,6 @@ or
 --------------------------------------
 	# tftp 0x4000000 u-boot.img
 
-	# ssp w 0 0x4000000 0x100000 0x200000
-or
 	# sf erase 0x100000 0x200000
 	# sf write 0x4000000 0x100000 0x200000
 
@@ -232,8 +216,6 @@ or
 --------------------------
 	# tftp 0x4000000 AXM5600.bin
 
-	# ssp w 0 0x4000000 0x80000 0x10000
-or
 	# sf erase 0x80000 0x10000
 	# sf write 0x4000000 0x80000 0x10000
 
