@@ -117,6 +117,7 @@ the images u-boot.img and u-boot-spl.bin:
 MACHINE_FEATURES += " bootloader-lsi"
 PNWHITELIST_wr-axxiaarm += 'u-boot-lsi'
 _EOF
+     $ bitbake u-boot-lsi
 
   3) The u-boot.img and u-boot-spl.bin can be found in the path:
   build/tmp-glibc/deploy/images/axxiaarm/
@@ -182,6 +183,7 @@ the images u-boot.img and u-boot-spl.img:
 MACHINE_FEATURES += " bootloader-axxia"
 PNWHITELIST_wr-axxiaarm += 'u-boot-axxia'
 _EOF
+     $ bitbake u-boot-axxia
 
   3) The u-boot.img and u-boot-spl.img can be found in the path:
   build/tmp-glibc/deploy/images/axxiaarm64/
